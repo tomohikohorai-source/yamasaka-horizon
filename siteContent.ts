@@ -11,7 +11,7 @@ export const siteContent = {
     titleLine1: "その「熱狂」を、",
     titleAccent: "価値",
     titleLine2: "に変える。",
-    description: "スポーツ・エンタメ界のマーケティングDXを支援する。ファンとビジネスをデジタルで繋ぎ、推し活をもっと楽しく、もっと自由に。",
+    description: "スポーツ・エンタメ界’のマーケティングDXを支援する。ファンとビジネスをデジタルで繋ぎ、推し活をもっと楽しく、もっと自由に。",
     image: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&q=80&w=2000"
   },
 
@@ -63,10 +63,10 @@ export const siteContent = {
     {
       title: 'Entertainment Seminar',
       jpTitle: 'エンタメビジネスセミナー',
-      description: '音楽・芸能業界のDX人材育成。デジタルマーケティングとファン心理を組み合わせた実践的な講義を提供名。',
+      description: '音楽・芸能業界のDX人材育成。デジタルマーケティングとファン心理を組み合わせた実践的な講義を提供。',
       category: 'Education',
       year: '2023',
-      image: 'https://images.unsplash.com/photo-1459749411177-042180ceea72?auto=format&fit=crop&q=80&w=800'
+      image: 'https://images.unsplash.com/photo-1505373630103-89d00c2a5dc5?auto=format&fit=crop&q=80&w=800'
     },
     {
       title: 'Web3 Solution Design',
@@ -92,6 +92,6 @@ export const siteContent = {
 
   contact: {
     email: "support@yamasakahorizon.com",
-    address: "Tokyo, Japan"
+    address: "大阪府大阪市東住吉区山坂5-15-12"
   }
 };

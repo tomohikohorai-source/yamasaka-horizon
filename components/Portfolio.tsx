@@ -4,9 +4,10 @@ import { siteContent } from '../siteContent';
 
 interface PortfolioProps {
   onSelect?: (title: string) => void;
+  onViewAll?: () => void;
 }
 
-export const Portfolio: React.FC<PortfolioProps> = ({ onSelect }) => {
+export const Portfolio: React.FC<PortfolioProps> = ({ onSelect, onViewAll }) => {
   return (
     <div className="max-w-7xl mx-auto px-6 md:px-12">
       <div className="flex flex-col md:flex-row justify-between items-end mb-16 space-y-6 md:space-y-0">
@@ -14,7 +15,10 @@ export const Portfolio: React.FC<PortfolioProps> = ({ onSelect }) => {
           <span className="text-xs tracking-[0.4em] font-bold text-slate-400 uppercase">Portfolio</span>
           <h2 className="text-3xl md:text-4xl font-bold mt-4 text-slate-900">実績紹介</h2>
         </div>
-        <button className="text-xs font-bold tracking-[0.2em] border-b border-blue-500 pb-2 text-blue-600 hover:text-blue-400 transition-colors uppercase">
+        <button 
+          onClick={onViewAll}
+          className="text-xs font-bold tracking-[0.2em] border-b border-blue-500 pb-2 text-blue-600 hover:text-blue-400 transition-colors uppercase"
+        >
           All Works
         </button>
       </div>

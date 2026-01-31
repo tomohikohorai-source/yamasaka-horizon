@@ -14,7 +14,8 @@ import { siteContent } from './siteContent';
 
 // --- Sub-Page Components ---
 
-const PageLayout: React.FC<{ title: string, subtitle: string, onBack: () => void }> = ({ children, title, subtitle, onBack }) => (
+// Fix: Explicitly added children property to the props type for PageLayout to satisfy React 18+ typing requirements for React.FC
+const PageLayout: React.FC<{ title: string, subtitle: string, onBack: () => void, children?: React.ReactNode }> = ({ children, title, subtitle, onBack }) => (
   <div className="pt-32 pb-20 px-6 max-w-7xl mx-auto min-h-screen">
     <div className="max-w-4xl mx-auto">
       <button onClick={onBack} className="text-blue-600 font-bold text-xs tracking-widest mb-12 flex items-center group">
@@ -62,13 +63,14 @@ const PortfolioListPage = ({ onBack, onSelect }: { onBack: () => void, onSelect:
 const AboutPage = ({ onBack }: { onBack: () => void }) => (
   <PageLayout title="About Us" subtitle="熱狂を日常に、ワクワクを未来に。" onBack={onBack}>
     <About />
-    <div className="mt-20 p-10 bg-slate-50 rounded-3xl">
+    <div className="mt-20 p-10 bg-slate-50 rounded-3xl text-slate-800">
       <h3 className="text-2xl font-bold mb-6">Company Profile</h3>
       <dl className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm">
-        <div className="border-b border-slate-200 pb-4"><dt className="text-slate-400 mb-1">会社名</dt><dd className="font-bold">株式会社山坂ホライゾン</dd></div>
-        <div className="border-b border-slate-200 pb-4"><dt className="text-slate-400 mb-1">設立</dt><dd className="font-bold">2023年</dd></div>
-        <div className="border-b border-slate-200 pb-4"><dt className="text-slate-400 mb-1">所在地</dt><dd className="font-bold">東京都港区</dd></div>
-        <div className="border-b border-slate-200 pb-4"><dt className="text-slate-400 mb-1">事業内容</dt><dd className="font-bold">エンタメDXコンサルティング、ファンビジネス支援</dd></div>
+        <div className="border-b border-slate-200 pb-4"><dt className="text-slate-400 mb-1 font-medium">会社名</dt><dd className="font-bold">株式会社山坂ホライゾン</dd></div>
+        <div className="border-b border-slate-200 pb-4"><dt className="text-slate-400 mb-1 font-medium">代表取締役社長</dt><dd className="font-bold">洞井 知彦</dd></div>
+        <div className="border-b border-slate-200 pb-4"><dt className="text-slate-400 mb-1 font-medium">設立</dt><dd className="font-bold">2023年</dd></div>
+        <div className="border-b border-slate-200 pb-4"><dt className="text-slate-400 mb-1 font-medium">所在地</dt><dd className="font-bold">大阪府大阪市東住吉区山坂5-15-12</dd></div>
+        <div className="border-b border-slate-200 pb-4 md:col-span-2"><dt className="text-slate-400 mb-1 font-medium">事業内容</dt><dd className="font-bold">エンタメDXコンサルティング、ファンビジネス支援、新事業・テック支援、教育・セミナー</dd></div>
       </dl>
     </div>
   </PageLayout>
@@ -130,7 +132,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white text-slate-900">
       <Navbar 
         isScrolled={isScrolled} 
         onNavigate={(v) => navigate(v)} 
@@ -153,7 +155,10 @@ const App: React.FC = () => {
             </section>
             
             <section id="portfolio" className="py-20 bg-white">
-              <Portfolio onSelect={(t) => navigate('detail', t)} />
+              <Portfolio 
+                onSelect={(t) => navigate('detail', t)} 
+                onViewAll={() => navigate('portfolio-list')}
+              />
             </section>
             
             <section id="about" className="py-20 bg-slate-50/30">

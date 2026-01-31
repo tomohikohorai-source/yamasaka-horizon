@@ -11,13 +11,9 @@ export const About: React.FC = () => {
         <div className="aspect-square bg-white rounded-full overflow-hidden shadow-2xl p-4">
           <img 
             src={about.image} 
-            alt="Passion" 
+            alt="Vision" 
             className="w-full h-full object-cover rounded-full"
           />
-        </div>
-        <div className="absolute top-10 -left-6 md:block p-8 bg-gradient-to-br from-blue-600 to-indigo-700 text-white max-w-xs shadow-2xl rounded-2xl">
-          <p className="text-xl font-light italic mb-4">"{about.quote}"</p>
-          <p className="text-xs tracking-widest font-bold text-blue-200 uppercase">Our Core</p>
         </div>
       </div>
 
