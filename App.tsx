@@ -10,6 +10,7 @@ import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
 import { CookieBanner } from './components/CookieBanner';
 import { SearchModal } from './components/SearchModal';
+import { AIConcierge } from './components/AIConcierge';
 import { siteContent } from './siteContent';
 
 // --- Utils ---
@@ -28,7 +29,7 @@ const PageLayout: React.FC<{ title: string, subtitle: string, onBack: () => void
     <div className="max-w-4xl mx-auto">
       <button onClick={onBack} className="text-blue-600 font-bold text-xs tracking-widest mb-12 flex items-center group">
         <svg className="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-        BACK TO HOME
+        BACK
       </button>
       <div className="mb-16">
         <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tighter">{title}</h1>
@@ -141,6 +142,58 @@ const NewsDetailPage = ({ id, onBack, onNavigate }: { id: string, onBack: () => 
   );
 };
 
+const ServiceDetailPage = ({ id, onBack }: { id: string, onBack: () => void }) => {
+  const service = siteContent.services.find(s => s.id === id || s.title === id);
+  if (!service) return null;
+
+  return (
+    <div className="pt-32 pb-20 px-6 max-w-5xl mx-auto min-h-screen animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <button onClick={onBack} className="text-blue-600 font-bold text-xs tracking-widest mb-12 flex items-center group">
+        <svg className="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+        BACK TO SERVICES
+      </button>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start mb-20">
+        <div>
+          <span className="text-xs font-bold text-blue-500 tracking-[0.4em] uppercase mb-4 block">Service Details</span>
+          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-2 tracking-tighter">{service.title}</h1>
+          <p className="text-lg font-bold text-blue-600/60 mb-8">{service.jpTitle}</p>
+          
+          <div className="space-y-6 text-slate-600 leading-relaxed text-lg">
+            <p className="font-bold text-slate-900">{service.description}</p>
+            <p className="whitespace-pre-line">{service.longDescription}</p>
+          </div>
+        </div>
+        <div className="rounded-3xl overflow-hidden shadow-2xl aspect-[4/3] lg:aspect-square">
+          <img src={service.image} alt={service.title} className="w-full h-full object-cover" />
+        </div>
+      </div>
+
+      <div className="bg-slate-50 rounded-3xl p-10 md:p-16 border border-slate-100">
+        <h3 className="text-2xl font-bold text-slate-900 mb-10 text-center">支援内容の詳細</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {service.features.map((feature, idx) => (
+            <div key={idx} className="flex items-start space-x-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100 transition-transform hover:-translate-y-1">
+              <div className="w-8 h-8 bg-blue-50 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <span className="text-slate-700 font-medium leading-relaxed">{feature}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-20 flex justify-center">
+        <a href="#contact" onClick={() => onBack()} className="px-12 py-5 bg-slate-900 text-white text-xs font-bold tracking-[0.3em] hover:bg-blue-600 transition-all rounded-full shadow-2xl">
+          CONTACT US / お問い合わせ
+        </a>
+      </div>
+    </div>
+  );
+};
+
 const SitemapPage = ({ onBack, onNavigate }: { onBack: () => void, onNavigate: (view: string, titleOrId?: string) => void }) => (
   <PageLayout title="Sitemap" subtitle="サイト構成・主要ページ一覧" onBack={onBack}>
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
@@ -164,49 +217,24 @@ const SitemapPage = ({ onBack, onNavigate }: { onBack: () => void, onNavigate: (
           <li><button onClick={() => onNavigate('sitemap')} className="hover:text-blue-600 transition-colors font-bold text-blue-600 text-left w-full">サイトマップ</button></li>
         </ul>
       </div>
-      <div className="space-y-6">
-        <h3 className="text-xl font-bold border-b border-slate-100 pb-2">External Links</h3>
-        <ul className="space-y-3 text-slate-600 text-sm">
-          <li><a href="https://www.yamasakahorizon.com/" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 transition-colors block">オフィシャルサイト</a></li>
-        </ul>
+    </div>
+  </PageLayout>
+);
+
+const LegalPage = ({ title, content, onBack }: { title: string, content: string, onBack: () => void }) => (
+  <PageLayout title={title} subtitle="Legal Information" onBack={onBack}>
+    <div className="prose prose-slate max-w-none">
+      <div className="whitespace-pre-line text-slate-600 leading-relaxed bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+        {content}
       </div>
     </div>
   </PageLayout>
 );
 
-const LegalPage: React.FC<{ title: string, content: React.ReactNode, onBack: () => void }> = ({ title, content, onBack }) => (
-  <PageLayout title={title} subtitle="法的事項に関するご案内" onBack={onBack}>
-    <div className="prose prose-slate max-w-none text-slate-600 leading-relaxed text-sm md:text-base">
-      {content}
-    </div>
-  </PageLayout>
-);
-
-const DetailPage = ({ title, onBack }: { title: string, onBack: () => void }) => (
-  <div className="pt-32 pb-20 px-6 max-w-4xl mx-auto min-h-screen text-center animate-in fade-in duration-700">
-    <button onClick={onBack} className="text-blue-600 font-bold text-xs tracking-widest mb-12 flex items-center justify-center group">
-      <svg className="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-      BACK TO HOME
-    </button>
-    <h1 className="text-4xl md:text-5xl font-bold mb-8 tracking-tighter">{title}</h1>
-    <div className="aspect-video bg-slate-100 rounded-3xl mb-12 overflow-hidden shadow-2xl">
-      <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1200" className="w-full h-full object-cover" alt={title} />
-    </div>
-    <div className="text-left max-w-2xl mx-auto text-slate-600 leading-relaxed space-y-6">
-      <p className="text-lg font-medium text-slate-900">エンタメ体験のデジタル・トランスフォーメーション</p>
-      <p>こちらは「{title}」の詳細ページサンプルです。具体的なプロジェクトの背景、解決した課題、導入したテクノロジー、および得られた成果について詳しく記載されます。</p>
-      <p>山坂ホライゾンでは、単なる技術導入に留まらず、ファンの心理に基づいた本質的なエンゲージメントの向上を目指しています。ファンが何を求め、どこに熱狂を感じるのかを深く理解し、それをデジタルの力で増幅させます。</p>
-    </div>
-  </div>
-);
-
-type ViewState = 'home' | 'news-list' | 'news-detail' | 'services-list' | 'portfolio-list' | 'about-page' | 'contact-page' | 'detail' | 'privacy-policy' | 'terms-of-service' | 'cookie-policy' | 'sitemap';
-
 const App: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [view, setView] = useState<ViewState>('home');
-  const [activeId, setActiveId] = useState('');
-  const [detailTitle, setDetailTitle] = useState('');
+  const [currentView, setCurrentView] = useState('home');
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   useEffect(() => {
@@ -217,88 +245,95 @@ const App: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navigate = (newView: string, titleOrId: string = '') => {
-    if (newView === 'news-detail') {
-      setActiveId(titleOrId);
-    } else {
-      setDetailTitle(titleOrId);
-    }
-    setView(newView as ViewState);
+  const handleNavigate = (view: string, id?: string) => {
+    setCurrentView(view);
+    setSelectedId(id || null);
     window.scrollTo(0, 0);
-    setIsSearchOpen(false);
   };
 
-  return (
-    <div className="min-h-screen bg-white text-slate-900 selection:bg-blue-100 selection:text-blue-700">
-      <Navbar 
-        isScrolled={isScrolled} 
-        onNavigate={(v) => navigate(v)} 
-        onSearchToggle={() => setIsSearchOpen(true)}
-      />
-      
-      <main>
-        {view === 'home' && (
-          <>
+  const renderContent = () => {
+    switch (currentView) {
+      case 'news-list':
+        return <NewsListPage onBack={() => setCurrentView('home')} onSelect={(id) => handleNavigate('news-detail', id)} />;
+      case 'news-detail':
+        return <NewsDetailPage id={selectedId || ''} onBack={() => setCurrentView('news-list')} onNavigate={handleNavigate} />;
+      case 'service-detail':
+        return <ServiceDetailPage id={selectedId || ''} onBack={() => setCurrentView('home')} />;
+      case 'about-page':
+        return <PageLayout title="About Us" subtitle="熱狂を日常に、ワクワクを未来に。" onBack={() => setCurrentView('home')}><About /></PageLayout>;
+      case 'contact-page':
+        return <PageLayout title="Contact" subtitle="プロジェクトのご相談はこちらから" onBack={() => setCurrentView('home')}><Contact /></PageLayout>;
+      case 'services-list':
+        return <PageLayout title="Services" subtitle="スポーツ・エンタメDXへの挑戦" onBack={() => setCurrentView('home')}><Services onSelect={(id) => handleNavigate('service-detail', id)} /></PageLayout>;
+      case 'portfolio-list':
+        return <PageLayout title="Portfolio" subtitle="これまでの主な実績" onBack={() => setCurrentView('home')}><Portfolio /></PageLayout>;
+      case 'sitemap':
+        return <SitemapPage onBack={() => setCurrentView('home')} onNavigate={handleNavigate} />;
+      case 'privacy-policy':
+        return <LegalPage title="Privacy Policy" content="ここにプライバシーポリシーの内容が入ります。" onBack={() => setCurrentView('home')} />;
+      case 'terms-of-service':
+        return <LegalPage title="Terms of Service" content="ここにサイト利用規約の内容が入ります。" onBack={() => setCurrentView('home')} />;
+      case 'cookie-policy':
+        return <LegalPage title="Cookie Policy" content="ここにクッキーポリシーの内容が入ります。" onBack={() => setCurrentView('home')} />;
+      default:
+        return (
+          <main className="animate-in fade-in duration-1000">
             <section id="hero">
               <Hero />
             </section>
-
-            <section id="news" className="py-12 bg-white border-b border-slate-50 relative z-20 shadow-[-20px_0_40px_rgba(0,0,0,0.03)]">
+            
+            <section id="news" className="py-24 bg-white">
               <News 
-                onViewAll={() => navigate('news-list')} 
-                onSelect={(id) => navigate('news-detail', id)}
+                onViewAll={() => handleNavigate('news-list')} 
+                onSelect={(id) => handleNavigate('news-detail', id)} 
               />
             </section>
-            
-            <section id="services" className="py-20 bg-slate-50/50">
-              <Services onSelect={(t) => navigate('detail', t)} />
+
+            <section id="services" className="py-32 bg-slate-50">
+              <Services onSelect={(id) => handleNavigate('service-detail', id)} />
             </section>
-            
-            <section id="portfolio" className="py-20 bg-white">
-              <Portfolio 
-                onSelect={(t) => navigate('detail', t)} 
-                onViewAll={() => navigate('portfolio-list')}
-              />
+
+            <section id="portfolio" className="py-32 bg-white">
+              <Portfolio onViewAll={() => handleNavigate('portfolio-list')} />
             </section>
-            
-            <section id="about" className="py-20 bg-slate-50/30">
+
+            <section id="about" className="py-32 bg-slate-50">
               <About />
             </section>
-            
-            <section id="contact" className="py-20 bg-slate-900 text-white">
+
+            <section id="contact" className="py-32 bg-slate-900 text-white">
               <Contact />
             </section>
-          </>
-        )}
+          </main>
+        );
+    }
+  };
 
-        {view === 'news-list' && <NewsListPage onBack={() => navigate('home')} onSelect={(id) => navigate('news-detail', id)} />}
-        {view === 'news-detail' && <NewsDetailPage id={activeId} onBack={() => navigate('news-list')} onNavigate={navigate} />}
-        {view === 'services-list' && <PageLayout title="Our Services" subtitle="スポーツ・エンタメ界の課題を解決する3つのアプローチ" onBack={() => navigate('home')}><Services onSelect={(t) => navigate('detail', t)} /></PageLayout>}
-        {view === 'portfolio-list' && <PageLayout title="Portfolio" subtitle="これまでに手掛けてきたプロジェクトの実績" onBack={() => navigate('home')}><Portfolio onSelect={(t) => navigate('detail', t)} onViewAll={() => {}} /></PageLayout>}
-        {view === 'about-page' && <PageLayout title="About Us" subtitle="熱狂を日常に、ワクワクを未来に。" onBack={() => navigate('home')}><About /></PageLayout>}
-        {view === 'contact-page' && <PageLayout title="Contact" subtitle="プロジェクトのご相談やお問い合わせはこちらから" onBack={() => navigate('home')}><Contact /></PageLayout>}
-        {view === 'detail' && <DetailPage title={detailTitle} onBack={() => navigate('home')} />}
-        {view === 'sitemap' && <SitemapPage onBack={() => navigate('home')} onNavigate={navigate} />}
-        
-        {(view === 'privacy-policy' || view === 'terms-of-service' || view === 'cookie-policy') && (
-           <LegalPage 
-             title={view === 'privacy-policy' ? "プライバシーポリシー" : view === 'terms-of-service' ? "サイト利用条件" : "クッキーポリシー"}
-             onBack={() => navigate('home')}
-             content={<div className="text-slate-600">法的文書のコンテンツがここに表示されます。</div>}
-           />
-        )}
-      </main>
-
-      <Footer onNavigate={(v) => navigate(v)} />
+  return (
+    <div className="relative min-h-screen">
+      <Navbar 
+        isScrolled={isScrolled} 
+        onNavigate={handleNavigate} 
+        onSearchToggle={() => setIsSearchOpen(true)}
+      />
       
+      {renderContent()}
+
+      <Footer onNavigate={handleNavigate} />
+      
+      <CookieBanner onNavigate={handleNavigate} />
+
       {isSearchOpen && (
         <SearchModal 
           onClose={() => setIsSearchOpen(false)} 
-          onNavigate={navigate}
+          onNavigate={(view, id) => {
+            setIsSearchOpen(false);
+            handleNavigate(view === 'detail' ? 'service-detail' : view, id);
+          }}
         />
       )}
-      
-      <CookieBanner onNavigate={navigate} />
+
+      <AIConcierge />
     </div>
   );
 };
