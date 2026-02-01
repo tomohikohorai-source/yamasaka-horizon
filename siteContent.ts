@@ -14,7 +14,7 @@
 
 // --- 画像配信元設定 ---
 // デフォルトはUnsplash（デモ用）です。
-const ASSETS_BASE_URL = "https://images.unsplash.com"; 
+const ASSETS_BASE_URL = "https://images.unsplash.com";
 
 export const siteContent = {
   brand: {
@@ -22,7 +22,7 @@ export const siteContent = {
     nameAccent: "HORIZON",
     description: "スポーツ・エンタメの熱狂をデジタルで価値に変える、ファン中心のDXコンサルティング。"
   },
-  
+
   hero: {
     tag: "CONNECTING PASSION",
     titleLine1: "その「熱狂」を、",
@@ -33,37 +33,37 @@ export const siteContent = {
   },
 
   news: [
-    { 
+    {
       id: 'news-001',
-      date: '2025.03.20', 
-      category: 'EVENT', 
+      date: '2025.03.20',
+      category: 'EVENT',
       title: '次世代エンタメDXセミナー登壇のお知らせ',
       type: 'Seminar',
       image: `${ASSETS_BASE_URL}/photo-1540575861501-7ad0582373f3?auto=format&fit=crop&q=80&w=1200`,
       content: '2025年4月に開催される「デジタル・エンターテインメント・サミット」にて、弊社代表の洞井が登壇いたします。スポーツチームがいかにしてデジタル技術を活用し、ファンのエンゲージメントを高めるか、最新事例を交えてお話しします。オンライン配信も予定しておりますので、ぜひご参加ください。'
     },
-    { 
+    {
       id: 'news-002',
-      date: '2025.03.01', 
-      category: 'CASE', 
+      date: '2025.03.01',
+      category: 'CASE',
       title: '推し活支援プラットフォームのコンサルティング事例公開',
       type: 'Case Study',
       image: `${ASSETS_BASE_URL}/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80&w=1200`,
       content: '特定のアーティストを応援する「推し活」をより豊かにするための新しいプラットフォームの設計支援を行いました。ファンの行動データを分析し、コミュニティ内での貢献を可視化する仕組みを導入した結果、アクティブユーザー数が前年比150%を記録。デジタルギフトや会員限定コンテンツの展開についても詳しく解説しています。'
     },
-    { 
+    {
       id: 'news-003',
-      date: '2025.02.15', 
-      category: 'INFO', 
+      date: '2025.02.15',
+      category: 'INFO',
       title: '大学講義「デジタル時代のファンビジネス」開講しました',
       type: 'Education',
       image: `${ASSETS_BASE_URL}/photo-1523050335456-c38a89b7ed14?auto=format&fit=crop&q=80&w=1200`,
       content: '昨年に引き続き、国内主要大学の経営学部にて寄付講座を担当することになりました。ファン心理とデータ分析を融合させた「ファン・セントリック・マーケティング」の実践について、15回の講義を通じて次世代のエンタメ業界を担うリーダーたちに伝えていきます。学生たちの熱意あるディスカッションが楽しみです。'
     },
-    { 
+    {
       id: 'news-004',
-      date: '2024.12.10', 
-      category: 'UPDATE', 
+      date: '2024.12.10',
+      category: 'UPDATE',
       title: 'コーポレートサイトをリニューアルしました',
       type: 'Corporate',
       image: `${ASSETS_BASE_URL}/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200`,
@@ -132,7 +132,7 @@ export const siteContent = {
     title: "ファンと業界の「新しい関係」を作る",
     description1: "私たちは、スポーツ・エンタメが大好きな一人の「ファン」の視点を忘れません。推しを想うエネルギーが、テクノロジーによって正しく還元され、より良いエンタメ体験として戻ってくる。そんな循環を作ることが私たちの使命です。",
     description2: "コンサルティングは手段にすぎません。その先にある「最高の笑顔」のために、私たちはデジタルとリアルの架け橋となります。",
-    image: `${ASSETS_BASE_URL}/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&q=80&w=800`,
+    image: `https://drive.google.com/file/d/1rYZoRojQLxNSBJ2EIcywn8e9zCx5uP1I`,
     companyProfile: [
       { label: "会社名", value: "株式会社ヤマサカホライズン" },
       { label: "代表取締役社長", value: "洞井 知彦" },
