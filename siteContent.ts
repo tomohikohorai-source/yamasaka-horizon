@@ -132,7 +132,7 @@ export const siteContent = {
     title: "ファンと業界の「新しい関係」を作る",
     description1: "私たちは、スポーツ・エンタメが大好きな一人の「ファン」の視点を忘れません。推しを想うエネルギーが、テクノロジーによって正しく還元され、より良いエンタメ体験として戻ってくる。そんな循環を作ることが私たちの使命です。",
     description2: "コンサルティングは手段にすぎません。その先にある「最高の笑顔」のために、私たちはデジタルとリアルの架け橋となります。",
-    image: `https://drive.google.com/uc?export=view&id=1rYZoRojQLxNSBJ2EIcywn8e9zCx5uP1I/`,
+    image: `https://drive.google.com/uc?export=view&id=1rYZoRojQLxNSBJ2EIcywn8e9zCx5uP1I`,
     companyProfile: [
       { label: "会社名", value: "株式会社ヤマサカホライズン" },
       { label: "代表取締役社長", value: "洞井 知彦" },
