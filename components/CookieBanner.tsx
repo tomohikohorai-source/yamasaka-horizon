@@ -1,18 +1,22 @@
 
 import React, { useState, useEffect } from 'react';
 
-export const CookieBanner: React.FC = () => {
+interface CookieBannerProps {
+  onNavigate?: (view: string) => void;
+}
+
+export const CookieBanner: React.FC<CookieBannerProps> = ({ onNavigate }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     const consent = localStorage.getItem('cookie-consent');
-    // If no choice has been made, show the banner
+    // もし同意の選択がまだなされていない場合は、バナーを表示する
     if (!consent) {
       const timer = setTimeout(() => setIsVisible(true), 1500);
       return () => clearTimeout(timer);
     }
     
-    // If consent was previously declined, ensure any non-functional tracking is disabled
+    // すでに拒否されている場合は非機能クッキーを無効にする処理などを実行
     if (consent === 'declined') {
       disableNonEssentialCookies();
     }
@@ -21,30 +25,21 @@ export const CookieBanner: React.FC = () => {
   const handleAccept = () => {
     localStorage.setItem('cookie-consent', 'accepted');
     setIsVisible(false);
-    // In a real app, you would initialize your tracking scripts here (e.g., GTM, GA4)
-    console.log('Cookies accepted. Enabling tracking.');
   };
 
   const handleDecline = () => {
     localStorage.setItem('cookie-consent', 'declined');
     setIsVisible(false);
     disableNonEssentialCookies();
-    console.log('Cookies declined. Non-essential tracking disabled.');
   };
 
   const disableNonEssentialCookies = () => {
-    // Functional requirement: Ensure no non-essential cookies are set.
-    // This is where you would disable Google Analytics, marketing pixels, etc.
     (window as any).disableTracking = true;
-    
-    // Clear any existing non-essential cookies if they were somehow set
     const cookies = document.cookie.split(";");
     for (let i = 0; i < cookies.length; i++) {
         const cookie = cookies[i];
         const eqPos = cookie.indexOf("=");
         const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-        // Functional cookies like session or consent are usually allowed, 
-        // but we'd clear things like _ga, _gid, _fbp here.
         if (name.trim().startsWith('_')) {
             document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
         }
@@ -54,7 +49,7 @@ export const CookieBanner: React.FC = () => {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-6 left-6 right-6 md:left-auto md:right-8 md:w-[400px] bg-white border border-slate-100 shadow-2xl rounded-2xl p-6 z-[100] animate-in slide-in-from-bottom-10 duration-500">
+    <div className="fixed bottom-6 left-6 right-6 md:left-auto md:right-8 md:w-[420px] bg-white border border-slate-100 shadow-2xl rounded-2xl p-6 z-[100] animate-in slide-in-from-bottom-10 duration-500">
       <div className="flex items-start space-x-4">
         <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center flex-shrink-0">
           <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -63,8 +58,15 @@ export const CookieBanner: React.FC = () => {
         </div>
         <div className="flex-1">
           <h3 className="text-sm font-bold text-slate-900 mb-2">COOKIE利用の同意</h3>
-          <p className="text-xs text-slate-500 leading-relaxed mb-4">
-            当サイトでは、サービスの向上、およびユーザー体験の最適化のためにクッキーを使用しています。同意いただける場合は「同意する」を、拒否される場合は「拒否する」を選択してください。
+          <p className="text-[11px] text-slate-500 leading-relaxed mb-4">
+            当サイトでは、サービスの向上、およびユーザー体験の最適化のためにクッキーを使用しています。
+            <button 
+              onClick={() => onNavigate?.('cookie-policy')}
+              className="text-blue-600 hover:underline font-bold mx-1"
+            >
+              詳細は当社クッキーポリシーをご確認ください。
+            </button>
+            同意いただける場合は「同意する」を、拒否される場合は「拒否する」を選択してください。
           </p>
           <div className="flex space-x-3">
             <button 

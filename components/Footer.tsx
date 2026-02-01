@@ -45,6 +45,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 <li><a href="#" onClick={(e) => handleLink(e, 'privacy-policy')} className="hover:text-white transition-colors">Privacy Policy</a></li>
                 <li><a href="#" onClick={(e) => handleLink(e, 'terms-of-service')} className="hover:text-white transition-colors">Terms of Service</a></li>
                 <li><a href="#" onClick={(e) => handleLink(e, 'cookie-policy')} className="hover:text-white transition-colors">Cookie Policy</a></li>
+                <li><a href="#" onClick={(e) => handleLink(e, 'sitemap')} className="hover:text-white transition-colors">Sitemap</a></li>
               </ul>
             </div>
           </div>
@@ -54,7 +55,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           <div>© 2024 {siteContent.brand.name} {siteContent.brand.nameAccent}. ALL RIGHTS RESERVED.</div>
           <div className="flex space-x-8">
             <span className="cursor-default">DOMAINS & HOSTING</span>
-            <span className="cursor-default">SITEMAP</span>
+            <span className="cursor-pointer hover:text-white transition-colors" onClick={() => onNavigate('sitemap')}>SITEMAP</span>
           </div>
         </div>
       </div>

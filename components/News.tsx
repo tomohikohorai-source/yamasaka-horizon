@@ -4,9 +4,18 @@ import { siteContent } from '../siteContent';
 
 interface NewsProps {
   onViewAll?: () => void;
+  onSelect?: (id: string) => void;
 }
 
-export const News: React.FC<NewsProps> = ({ onViewAll }) => {
+const isWithinLastMonth = (dateStr: string) => {
+  const date = new Date(dateStr.replace(/\./g, '/'));
+  const now = new Date();
+  const diffTime = Math.abs(now.getTime() - date.getTime());
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return diffDays <= 30;
+};
+
+export const News: React.FC<NewsProps> = ({ onViewAll, onSelect }) => {
   // Show only first 3 on top page
   const displayNews = siteContent.news.slice(0, 3);
 
@@ -20,13 +29,29 @@ export const News: React.FC<NewsProps> = ({ onViewAll }) => {
         </div>
         <div className="flex-grow">
           <div className="space-y-4 mb-8">
-            {displayNews.map((item, index) => (
-              <div key={index} className="group flex flex-col sm:flex-row sm:items-center border-b border-slate-100 pb-4 hover:border-blue-200 transition-colors cursor-pointer">
-                <span className="text-xs font-mono text-slate-400 w-32">{item.date}</span>
-                <span className="text-[10px] font-bold text-blue-500 border border-blue-500 px-2 py-0.5 rounded sm:mr-6 w-fit my-2 sm:my-0">{item.category}</span>
-                <span className="text-sm text-slate-700 group-hover:text-blue-600 transition-colors">{item.title}</span>
-              </div>
-            ))}
+            {displayNews.map((item, index) => {
+              const isNew = isWithinLastMonth(item.date);
+              return (
+                <div 
+                  key={index} 
+                  onClick={() => onSelect?.(item.id)}
+                  className="group flex flex-col sm:flex-row sm:items-center border-b border-slate-100 pb-4 hover:border-blue-200 transition-colors cursor-pointer relative"
+                >
+                  <span className="text-xs font-mono text-slate-400 w-32">{item.date}</span>
+                  <div className="flex items-center space-x-3 sm:mr-6">
+                    <span className="text-[10px] font-bold text-blue-500 border border-blue-500 px-2 py-0.5 rounded w-fit my-2 sm:my-0 uppercase whitespace-nowrap">
+                      {item.category}
+                    </span>
+                    {isNew && (
+                      <span className="bg-pink-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full animate-pulse">NEW</span>
+                    )}
+                  </div>
+                  <span className="text-sm text-slate-700 group-hover:text-blue-600 transition-colors flex-1 truncate">
+                    {item.title}
+                  </span>
+                </div>
+              );
+            })}
           </div>
           <div className="flex justify-end">
             <button 
