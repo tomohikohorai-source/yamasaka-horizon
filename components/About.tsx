@@ -8,11 +8,16 @@ export const About: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
       <div className="relative">
-        <div className="aspect-square bg-white rounded-full overflow-hidden shadow-2xl p-4">
+        {/* object-centerを明示的に指定して顔が中央に来るように設定 */}
+        <div className="aspect-square bg-slate-100 rounded-full overflow-hidden shadow-2xl border-[8px] border-white relative group">
           <img 
             src={about.image} 
             alt="Vision" 
-            className="w-full h-full object-cover rounded-full"
+            className="w-full h-full object-cover object-center transition-transform duration-1000 group-hover:scale-110"
+            onError={(e) => {
+              // フォールバック画像
+              (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&q=80&w=800";
+            }}
           />
         </div>
       </div>
