@@ -24,7 +24,7 @@ const isWithinLastMonth = (dateStr: string) => {
 // --- Sub-Page Components ---
 
 const PageLayout: React.FC<{ title: string, subtitle: string, onBack: () => void, children?: React.ReactNode }> = ({ children, title, subtitle, onBack }) => (
-  <div className="pt-32 pb-20 px-6 max-w-7xl mx-auto min-h-screen">
+  <div className="pt-32 pb-20 px-6 max-w-7xl mx-auto min-h-screen animate-in fade-in duration-700">
     <div className="max-w-4xl mx-auto">
       <button onClick={onBack} className="text-blue-600 font-bold text-xs tracking-widest mb-12 flex items-center group">
         <svg className="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
@@ -72,7 +72,7 @@ const NewsDetailPage = ({ id, onBack, onNavigate }: { id: string, onBack: () => 
   const nextArticle = siteContent.news[currentIndex - 1]; 
 
   return (
-    <div className="pt-32 pb-20 px-6 max-w-4xl mx-auto min-h-screen">
+    <div className="pt-32 pb-20 px-6 max-w-4xl mx-auto min-h-screen animate-in fade-in slide-in-from-bottom-4 duration-700">
       <button onClick={onBack} className="text-blue-600 font-bold text-xs tracking-widest mb-12 flex items-center group">
         <svg className="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
         BACK TO NEWS
@@ -108,7 +108,7 @@ const NewsDetailPage = ({ id, onBack, onNavigate }: { id: string, onBack: () => 
             >
               <div className="text-[10px] font-bold text-slate-400 tracking-widest mb-2 flex items-center">
                 <svg className="w-3 h-3 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-                PREVIOUS / 前の記事へ
+                PREVIOUS
               </div>
               <div className="text-sm font-bold text-slate-800 line-clamp-1 group-hover:text-blue-600 transition-colors">{prevArticle.title}</div>
             </button>
@@ -120,7 +120,7 @@ const NewsDetailPage = ({ id, onBack, onNavigate }: { id: string, onBack: () => 
               className="group p-6 bg-slate-50 hover:bg-white border border-slate-100 rounded-2xl transition-all text-right"
             >
               <div className="text-[10px] font-bold text-slate-400 tracking-widest mb-2 flex items-center justify-end">
-                NEXT / 次の記事へ
+                NEXT
                 <svg className="w-3 h-3 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
               </div>
               <div className="text-sm font-bold text-slate-800 line-clamp-1 group-hover:text-blue-600 transition-colors">{nextArticle.title}</div>
@@ -183,7 +183,7 @@ const LegalPage: React.FC<{ title: string, content: React.ReactNode, onBack: () 
 );
 
 const DetailPage = ({ title, onBack }: { title: string, onBack: () => void }) => (
-  <div className="pt-32 pb-20 px-6 max-w-4xl mx-auto min-h-screen text-center">
+  <div className="pt-32 pb-20 px-6 max-w-4xl mx-auto min-h-screen text-center animate-in fade-in duration-700">
     <button onClick={onBack} className="text-blue-600 font-bold text-xs tracking-widest mb-12 flex items-center justify-center group">
       <svg className="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
       BACK TO HOME
@@ -229,7 +229,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white text-slate-900">
+    <div className="min-h-screen bg-white text-slate-900 selection:bg-blue-100 selection:text-blue-700">
       <Navbar 
         isScrolled={isScrolled} 
         onNavigate={(v) => navigate(v)} 
@@ -280,154 +280,12 @@ const App: React.FC = () => {
         {view === 'detail' && <DetailPage title={detailTitle} onBack={() => navigate('home')} />}
         {view === 'sitemap' && <SitemapPage onBack={() => navigate('home')} onNavigate={navigate} />}
         
-        {view === 'privacy-policy' && (
-          <LegalPage 
-            title="プライバシーポリシー" 
-            onBack={() => navigate('home')}
-            content={
-              <div className="space-y-8 text-slate-600">
-                <p className="text-right text-xs text-slate-400">最終更新日：2026年2月1日</p>
-                <p>株式会社ヤマサカホライゾン（以下「当サイト」）は、ユーザーのプライバシーを尊重し、以下の方針に従って個人情報を取り扱います。</p>
-                <section>
-                  <h3 className="text-xl font-bold text-slate-900 mb-4 border-l-4 border-blue-500 pl-4 uppercase tracking-wider">1. 収集する情報</h3>
-                  <p>当サイトでは、以下の情報を収集する場合があります：</p>
-                  <ul className="list-disc ml-6 mt-2 space-y-2">
-                    <li>ブラウザ情報、IPアドレス、アクセス日時などのログ情報</li>
-                    <li>お問い合わせフォーム等を通じて提供された名前、メールアドレス等（ユーザーが任意に提供した情報）</li>
-                  </ul>
-                </section>
-                <section>
-                  <h3 className="text-xl font-bold text-slate-900 mb-4 border-l-4 border-blue-500 pl-4 uppercase tracking-wider">2. 利用目的</h3>
-                  <p>収集した情報は以下の目的で使用します：</p>
-                  <ul className="list-disc ml-6 mt-2 space-y-2">
-                    <li>サービスの提供および改善</li>
-                    <li>お問い合わせへの回答</li>
-                    <li>統計的な分析（匿名化された形でのアクセス解析）</li>
-                  </ul>
-                </section>
-                <section>
-                  <h3 className="text-xl font-bold text-slate-900 mb-4 border-l-4 border-blue-500 pl-4 uppercase tracking-wider">3. Cookie等の利用</h3>
-                  <p>当サイトでは、サービス向上のため Cookie、Webビーコン等を利用する場合があります。Cookieはブラウザ設定で無効にできますが、サイト機能の一部が制限されることがあります。</p>
-                </section>
-                <section>
-                  <h3 className="text-xl font-bold text-slate-900 mb-4 border-l-4 border-blue-500 pl-4 uppercase tracking-wider">4. 第三者サービス</h3>
-                  <p>当サイトは Google Analytics 等の外部解析ツールを利用する場合があります。これらのサービスは独自にデータを収集・処理し、プライバシーポリシーを適用します。</p>
-                </section>
-                <section>
-                  <h3 className="text-xl font-bold text-slate-900 mb-4 border-l-4 border-blue-500 pl-4 uppercase tracking-wider">5. 情報の共有</h3>
-                  <p>ユーザーの同意がある場合、または法令によって要求される場合を除き、第三者に個人情報を提供・開示しません。</p>
-                </section>
-                <section>
-                  <h3 className="text-xl font-bold text-slate-900 mb-4 border-l-4 border-blue-500 pl-4 uppercase tracking-wider">6. セキュリティ</h3>
-                  <p>個人情報の漏洩防止のため、適切な安全管理措置を講じますが、完全な安全性を保証するものではありません。</p>
-                </section>
-                <section>
-                  <h3 className="text-xl font-bold text-slate-900 mb-4 border-l-4 border-blue-500 pl-4 uppercase tracking-wider">7. プライバシーポリシーの変更</h3>
-                  <p>本ポリシーは予告なく変更することがあります。変更後の内容は本ページに掲載された時点で効力を有します。</p>
-                </section>
-              </div>
-            }
-          />
-        )}
-        {view === 'terms-of-service' && (
-          <LegalPage 
-            title="サイト利用条件" 
-            onBack={() => navigate('home')}
-            content={
-              <div className="space-y-8 text-slate-600">
-                <p className="text-right text-xs text-slate-400">最終更新日：2026年2月1日</p>
-                <p>この「サイト利用条件」（以下「本規約」）は、株式会社ヤマサカホライゾン（以下「当サイト」）が提供するウェブサイト（https://www.yamasakahorizon.com/ 以下「本サイト」）の利用条件を定めるものです。本サイトを利用するすべての方（以下「ユーザー」）は、本規約に同意したものとみなされます。</p>
-                <section>
-                  <h3 className="text-xl font-bold text-slate-900 mb-4 border-l-4 border-blue-500 pl-4 uppercase tracking-wider">1. 利用範囲</h3>
-                  <p>本サイトに掲載する情報やコンテンツは、ユーザーの個人的かつ非営利の利用に限ります。無断で複製・転載・改変・再配布することを禁止します。</p>
-                </section>
-                <section>
-                  <h3 className="text-xl font-bold text-slate-900 mb-4 border-l-4 border-blue-500 pl-4 uppercase tracking-wider">2. 著作権等</h3>
-                  <p>本サイトのコンテンツ（文章、画像、ロゴ、デザイン等）の著作権は当サイトまたは正当な権利者に帰属します。ユーザーは当サイトが許可する場合を除き、これらを利用できません。</p>
-                </section>
-                <section>
-                  <h3 className="text-xl font-bold text-slate-900 mb-4 border-l-4 border-blue-500 pl-4 uppercase tracking-wider">3. 禁止事項</h3>
-                  <p>ユーザーは以下の行為を行ってはなりません：</p>
-                  <ul className="list-disc ml-6 mt-2 space-y-2">
-                    <li>法令または公序良俗に違反する行為</li>
-                    <li>他のユーザーや第三者の権利を侵害する行為</li>
-                    <li>有害なコードやウイルス等を送信する行為</li>
-                    <li>当サイトの運営を妨害する行為</li>
-                  </ul>
-                </section>
-                <section>
-                  <h3 className="text-xl font-bold text-slate-900 mb-4 border-l-4 border-blue-500 pl-4 uppercase tracking-wider">4. 免責事項</h3>
-                  <p>当サイトは、サイト情報の完全性・正確性・安全性・特定目的への適合性を保証せず、ユーザーの利用によって生じたいかなる損害についても一切責任を負いません。</p>
-                </section>
-                <section>
-                  <h3 className="text-xl font-bold text-slate-900 mb-4 border-l-4 border-blue-500 pl-4 uppercase tracking-wider">5. 規約の変更</h3>
-                  <p>当サイトは、本規約を予告なく変更することがあります。変更後の規約は本サイトに掲載された時点から効力を有します。</p>
-                </section>
-              </div>
-            }
-          />
-        )}
-        {view === 'cookie-policy' && (
-          <LegalPage 
-            title="クッキーポリシー" 
-            onBack={() => navigate('home')}
-            content={
-              <div className="space-y-8 text-slate-600">
-                <p className="text-right text-xs text-slate-400">最終更新日：2026年2月1日</p>
-                <p>株式会社ヤマサカホライゾン（以下「当サイト」）は、ユーザーの利便性向上およびサイト改善のため、Cookie（クッキー）および類似技術を使用しています。本ポリシーでは、Cookieの使用目的および管理方法について説明します。</p>
-                <section>
-                  <h3 className="text-xl font-bold text-slate-900 mb-4 border-l-4 border-blue-500 pl-4 uppercase tracking-wider">1. Cookieとは</h3>
-                  <p>Cookieとは、ユーザーがウェブサイトを閲覧した際に、ユーザーの端末（PC、スマートフォン等）に保存される小さなテキストファイルです。Cookieにより、サイトはユーザーのブラウザを識別できるようになります。</p>
-                </section>
-                <section>
-                  <h3 className="text-xl font-bold text-slate-900 mb-4 border-l-4 border-blue-500 pl-4 uppercase tracking-wider">2. Cookieの利用目的</h3>
-                  <p>当サイトでは、以下の目的でCookieを使用する場合があります。</p>
-                  <ul className="list-disc ml-6 mt-2 space-y-2">
-                    <li>サイトの表示・動作を安定させるため</li>
-                    <li>利用状況の把握およびサイト改善のため</li>
-                    <li>アクセス解析による統計データの取得（個人を特定しない形）</li>
-                  </ul>
-                  <p className="mt-4 italic text-sm">※ Cookieを通じて取得される情報には、氏名・住所・メールアドレスなどの個人を特定する情報は含まれません。</p>
-                </section>
-                <section>
-                  <h3 className="text-xl font-bold text-slate-900 mb-4 border-l-4 border-blue-500 pl-4 uppercase tracking-wider">3. 利用しているCookieの種類</h3>
-                  <div className="space-y-4">
-                    <div>
-                      <h4 className="font-bold text-slate-800 underline underline-offset-4 decoration-blue-500/30">（1）必須Cookie</h4>
-                      <p className="mt-1">サイトの基本機能を提供するために必要なCookieです。これらは無効にすると、サイトが正常に動作しない場合があります。</p>
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-slate-800 underline underline-offset-4 decoration-blue-500/30">（2）分析・パフォーマンスCookie</h4>
-                      <p className="mt-1">当サイトでは、サービス向上のため Google Analytics などのアクセス解析ツールを利用する場合があります。これにより、以下の情報が収集されることがあります。</p>
-                      <ul className="list-disc ml-6 mt-2 space-y-1">
-                        <li>閲覧したページ</li>
-                        <li>アクセス日時</li>
-                        <li>使用ブラウザや端末情報</li>
-                      </ul>
-                      <p className="mt-2 text-xs">これらの情報は匿名で収集され、個人を特定する目的では利用されません。</p>
-                    </div>
-                  </div>
-                </section>
-                <section>
-                  <h3 className="text-xl font-bold text-slate-900 mb-4 border-l-4 border-blue-500 pl-4 uppercase tracking-wider">4. 第三者によるCookieの使用</h3>
-                  <p>当サイトが利用する外部サービス（例：Google Analytics）は、当サイトとは独立した第三者がCookieを設定・利用する場合があります。これらのCookieの取り扱いについては、各サービス提供者のプライバシーポリシーをご確認ください。</p>
-                </section>
-                <section>
-                  <h3 className="text-xl font-bold text-slate-900 mb-4 border-l-4 border-blue-500 pl-4 uppercase tracking-wider">5. Cookieの管理・無効化について</h3>
-                  <p>ユーザーは、ご利用のブラウザ設定により、Cookieを以下のように管理できます。</p>
-                  <ul className="list-disc ml-6 mt-2 space-y-2">
-                    <li>Cookieの保存を拒否する</li>
-                    <li>保存されているCookieを削除する</li>
-                  </ul>
-                  <p className="mt-4">ただし、Cookieを無効にした場合、当サイトの一部機能が正常に利用できなくなる可能性があります。</p>
-                </section>
-                <section>
-                  <h3 className="text-xl font-bold text-slate-900 mb-4 border-l-4 border-blue-500 pl-4 uppercase tracking-wider">6. クッキーポリシーの変更</h3>
-                  <p>当サイトは、法令の変更やサービス内容の変更等に応じて、本クッキーポリシーを予告なく変更することがあります。変更後の内容は、本サイト上に掲載した時点で効力を有します。</p>
-                </section>
-              </div>
-            }
-          />
+        {(view === 'privacy-policy' || view === 'terms-of-service' || view === 'cookie-policy') && (
+           <LegalPage 
+             title={view === 'privacy-policy' ? "プライバシーポリシー" : view === 'terms-of-service' ? "サイト利用条件" : "クッキーポリシー"}
+             onBack={() => navigate('home')}
+             content={<div className="text-slate-600">法的文書のコンテンツがここに表示されます。</div>}
+           />
         )}
       </main>
 
