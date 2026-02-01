@@ -10,7 +10,6 @@ import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
 import { CookieBanner } from './components/CookieBanner';
 import { SearchModal } from './components/SearchModal';
-import { AIConcierge } from './components/AIConcierge';
 import { siteContent } from './siteContent';
 
 // --- Utils ---
@@ -332,8 +331,6 @@ const App: React.FC = () => {
           }}
         />
       )}
-
-      <AIConcierge />
     </div>
   );
 };

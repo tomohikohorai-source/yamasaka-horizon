@@ -57,7 +57,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ onClose, onNavigate })
           <input 
             autoFocus
             type="text"
-            placeholder="サイト内を検索... (サービス、実績、ニュースなど)"
+            placeholder="サイト内を検索..."
             className="flex-1 bg-transparent border-none outline-none text-lg text-slate-800 placeholder-slate-300"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -69,8 +69,8 @@ export const SearchModal: React.FC<SearchModalProps> = ({ onClose, onNavigate })
 
         <div className="max-h-[60vh] overflow-y-auto p-4">
           {query && results.length === 0 && (
-            <div className="py-12 text-center text-slate-400">
-              「{query}」に一致する結果は見つかりませんでした。
+            <div className="py-12 text-center">
+              <p className="text-slate-400">「{query}」に一致する結果は見つかりませんでした。</p>
             </div>
           )}
 
@@ -93,6 +93,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ onClose, onNavigate })
 
           {results.length > 0 && (
             <div className="space-y-2">
+              <p className="text-[10px] font-bold tracking-widest text-slate-400 uppercase mb-4 px-2">Search Results</p>
               {results.map((res, i) => (
                 <button
                   key={i}
