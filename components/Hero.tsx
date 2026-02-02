@@ -28,7 +28,7 @@ export const Hero: React.FC = () => {
               <span className="inline-block whitespace-nowrap">{hero.titleLine2}</span>
             </span>
           </h1>
-          <p className="text-base md:text-lg text-slate-600 mb-10 leading-relaxed max-w-xl font-light">
+          <p className="text-base md:text-lg text-slate-600 mb-10 leading-relaxed max-w-xl font-light whitespace-pre-line">
             {hero.description}
           </p>
           <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">

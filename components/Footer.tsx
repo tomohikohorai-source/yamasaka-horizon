@@ -23,7 +23,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             >
               {siteContent.brand.name} <span className="font-light">{siteContent.brand.nameAccent}</span>
             </div>
-            <p className="text-slate-500 text-sm max-w-xs leading-relaxed">
+            <p className="text-slate-500 text-sm max-w-xs leading-relaxed whitespace-pre-line">
               {siteContent.brand.description}
             </p>
           </div>

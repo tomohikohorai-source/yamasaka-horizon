@@ -12,7 +12,7 @@ export const siteContent = {
   brand: {
     name: "YAMASAKA",
     nameAccent: "HORIZON",
-    description: "ファンの熱狂を価値に変える、ファン中心のマーケティング企業。"
+    description: "ファンの熱狂を価値に変える、\nファン中心のマーケティング企業。"
   },
   
   hero: {
@@ -20,7 +20,7 @@ export const siteContent = {
     titleLine1: "その「熱狂」を、",
     titleAccent: "価値",
     titleLine2: "に変える。",
-    description: "ファンとビジネスの架け橋となり、ファンの暮らしをもっと楽しく、もっと自由に。",
+    description: "ファンとビジネスの架け橋となり、\nファンの暮らしをもっと楽しく、もっと自由に。",
     image: `${ASSETS_BASE_URL}/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&q=80&w=2000`
   },
 
@@ -209,7 +209,7 @@ export const siteContent = {
 
   about: {
     quote: "熱狂を日常に、ワクワクを未来に。",
-    title: "ファンの熱量で世界を変える",
+    title: "ファンの熱量で\n世界を変える",
     description1: "私たちは、一人の「ファン」の視点を忘れません。「推す」ことのエネルギーが正しく還元され、より良い暮らし体験として戻ってくる。そんな循環を作ることが私たちの使命です。",
     description2: "私たちが支援したその先にある「最高の笑顔」のために、私たちはファンとビジネスの架け橋となります。",
     image: `${GOOGLE_DRIVE_BASE}1zvanthuFvEiY_gbQNRR40KjfUEaWgUUa`,

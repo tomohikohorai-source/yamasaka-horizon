@@ -8,14 +8,12 @@ export const About: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
       <div className="relative">
-        {/* object-centerを明示的に指定して顔が中央に来るように設定 */}
         <div className="aspect-square bg-slate-100 rounded-full overflow-hidden shadow-2xl border-[8px] border-white relative group">
           <img 
             src={about.image} 
             alt="Vision" 
             className="w-full h-full object-cover object-center transition-transform duration-1000 group-hover:scale-110"
             onError={(e) => {
-              // フォールバック画像
               (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&q=80&w=800";
             }}
           />
@@ -24,21 +22,22 @@ export const About: React.FC = () => {
 
       <div className="animate-in fade-in slide-in-from-right duration-700">
         <span className="text-xs tracking-[0.4em] font-bold text-slate-400 uppercase">Vision</span>
-        <h2 className="text-3xl md:text-4xl font-bold mt-4 mb-8 text-slate-900">{about.title}</h2>
+        <h2 className="text-3xl md:text-4xl font-bold mt-4 mb-8 text-slate-900 whitespace-pre-line">{about.title}</h2>
         <div className="space-y-6 text-slate-600 leading-relaxed mb-10">
           <p>{about.description1}</p>
           <p>{about.description2}</p>
         </div>
 
-        {/* Company Profile Section */}
         {about.companyProfile && (
           <div className="mb-12 pt-8 border-t border-slate-100">
             <h3 className="text-[10px] tracking-[0.3em] font-bold text-slate-400 uppercase mb-6">Company Profile / 会社概要</h3>
             <div className="space-y-4">
               {about.companyProfile.map((item, idx) => (
-                <div key={idx} className="flex flex-col sm:flex-row border-b border-slate-50 pb-3 sm:pb-2">
-                  <span className="text-[11px] font-bold text-slate-400 w-full sm:w-40 mb-1 sm:mb-0">{item.label}</span>
-                  <span className="text-sm text-slate-700 font-medium">{item.value}</span>
+                <div key={idx} className="flex flex-col sm:flex-row border-b border-slate-50 pb-3 sm:pb-2 items-start sm:items-baseline">
+                  <span className="text-[11px] font-bold text-slate-400 w-full sm:w-32 shrink-0 mb-1 sm:mb-0">{item.label}</span>
+                  <span className="text-sm text-slate-700 font-medium leading-relaxed flex-1">
+                    {item.value}
+                  </span>
                 </div>
               ))}
             </div>
