@@ -9,7 +9,6 @@ export interface Project {
   jpTitle: string;
   category: string;
   description: string;
-  year: string;
   image: string;
 }
 

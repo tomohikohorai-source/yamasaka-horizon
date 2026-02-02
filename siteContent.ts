@@ -68,7 +68,7 @@ export const siteContent = {
       jpTitle: 'マーケティング支援',
       description: 'お客様の事業を拡大するためのマーケティング戦略の策定、実行、効果測定まで包括して支援します。ファン一人ひとりの熱量をデータ化し、持続可能なビジネスモデルを構築します。',
       longDescription: 'スポーツやエンターテインメントにおいて、ファンの「熱狂」は最大の資産です。私たちはその熱量を一過性のものにせず、持続的なビジネス価値へと昇華させるための伴走型支援を行います。市場調査からコンセプト設計、具体的なファン獲得施策まで、現場感覚とデータサイエンスを融合させたアプローチで、クライアントの事業成長を加速させます。',
-      image: `${ASSETS_BASE_URL}/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=1200`, // Fandom/Concert atmosphere with lightsticks
+      image: `${ASSETS_BASE_URL}/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=1200`, 
       features: [
         'マーケティング戦略・中長期ロードマップの策定',
         '「推し活」を加速させるファン作り施策の立案と実行支援',
@@ -85,7 +85,7 @@ export const siteContent = {
       jpTitle: 'DX（IT活用）支援',
       description: 'ファンのエンゲージメント拡大、マーケティング業務効率化などに寄与するテクノロジーやサービスの導入を支援します。スタジアムからアプリまで、デジタルの力で「推し活」を滑らかにします。',
       longDescription: 'デジタルテクノロジーは、ファンとコンテンツの距離を劇的に縮める可能性を秘めています。私たちは、単なるシステムの導入にとどまらず、ユーザー体験（UX）を最優先に考えたDXを提案します。スタジアムでのスマート体験から、日常的なファンアプリの活用まで、オフラインとオンラインをシームレスに繋ぎ、運営の効率化とファンの満足度向上を同時に実現します。',
-      image: `${ASSETS_BASE_URL}/photo-1551650975-87deedd944c3?auto=format&fit=crop&q=80&w=1200`, // App UI focus
+      image: `${ASSETS_BASE_URL}/photo-1551650975-87deedd944c3?auto=format&fit=crop&q=80&w=1200`, 
       features: [
         'ファンデータを一元管理し、個別に最適化されたアプローチを可能にする CRM システム導入支援',
         'ファン同士やアーティストと繋がるファンコミュニケーションプラットフォームの選定と導入',
@@ -100,7 +100,7 @@ export const siteContent = {
       jpTitle: 'セミナー・教育',
       description: 'B to C領域における豊富な事業経験やマーケティングに関する知見を活かし、業界を支える高度なビジネス力と専門性を伝えます。理論だけでなく、現場で活きる実践知を共有します。',
       longDescription: '次世代のスポーツ・エンタメ業界を担う人材を育成することは、業界全体の底上げに繋がります。私たちは、現役のプロフェッショナルとして培ってきた最新のマーケティング手法やビジネスの「勘所」を、大学の講義や企業研修を通じて惜しみなく提供します。単なる理論の解説ではなく、実際の成功・失敗事例を交えた実践的なカリキュラムが特徴です。',
-      image: `${ASSETS_BASE_URL}/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&q=80&w=1200`, // Hands writing, no faces
+      image: `${ASSETS_BASE_URL}/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&q=80&w=1200`, 
       features: [
         '大学の経営学部やスポーツビジネス学科、各種セミナーでのマーケティング講義',
         '企業・団体向け：実務に直結する課題解決型ワークショップの開催',
@@ -113,36 +113,32 @@ export const siteContent = {
 
   portfolio: [
     {
-      title: 'Fan Engagement App',
-      jpTitle: 'ファンエンゲージメントアプリ',
-      category: 'Digital Strategy',
-      description: 'プロ球団向けアプリの企画・開発。データ分析に基づきファンの熱量を可視化し、リピート率向上を実現。',
-      year: '2023',
+      title: 'Pro Sports Marketing Strategy',
+      jpTitle: 'プロスポーツ団体への包括的マーケティング支援',
+      category: 'Marketing Support',
+      description: '戦略立案からファンデータ基盤構築、リアルイベント、コミュニケーション制作までを統合。ファンLTVとエンゲージメントを最大化するマーケティング設計を実現しました。',
+      image: `${ASSETS_BASE_URL}/photo-1504450758481-7338eba7524a?auto=format&fit=crop&q=80&w=800`
+    },
+    {
+      title: 'Next-Gen Stadium DX',
+      jpTitle: 'スタジアム・アリーナのDX化推進',
+      category: 'Digital Transformation',
+      description: 'AIカメラや高精度センサーを活用した人流・属性分析を導入。運営の効率化と、没入感の高いスマートな観戦エクスペリエンスを同時に実現しています。',
+      image: `${ASSETS_BASE_URL}/photo-1522708323590-d248b6ddc2bb?auto=format&fit=crop&q=80&w=800`
+    },
+    {
+      title: 'Food Logistics Marketing Education',
+      jpTitle: '食品・食材宅配業界向けマーケティング教育',
+      category: 'Seminar & Education',
+      description: '組織階層別の専門講座を通じ、マーケティング志向型組織への転換を強力に支援。ブランディング再構築から広告運用改善まで、実務に即した伴走支援を行いました。',
+      image: `${ASSETS_BASE_URL}/photo-1586762524444-80cd0020a59a?auto=format&fit=crop&q=80&w=800`
+    },
+    {
+      title: 'Oshikatsu Infrastructure Dev',
+      jpTitle: '「推し活」支援インフラ・サービスの開発',
+      category: 'Tech & Service Support',
+      description: '応援広告プラットフォームや聖地巡礼促進アプリを企画・開発。ファンの熱量を可視化し、地域移動や新たな経済活動を創出する新しいファン文化の基盤を提供します。',
       image: `${ASSETS_BASE_URL}/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&q=80&w=800`
-    },
-    {
-      title: 'Digital Arena Project',
-      jpTitle: '次世代スマートアリーナ構築',
-      category: 'Consulting',
-      description: 'スタジアムのDX化を支援。高速Wi-Fi基盤の整備とモバイルオーダー導入により、観戦体験をアップデート。',
-      year: '2024',
-      image: `${ASSETS_BASE_URL}/photo-1518152006812-edab29b069ac?auto=format&fit=crop&q=80&w=800`
-    },
-    {
-      title: 'Entertainment Seminar',
-      jpTitle: 'エンタメビジネスセミナー',
-      description: '音楽・芸能業界のDX人材育成。デジタルマーケティングとファン心理を組み合わせた実践的な講義を提供。',
-      category: 'Education',
-      year: '2023',
-      image: `${ASSETS_BASE_URL}/photo-1505373630103-89d00c2a5dc5?auto=format&fit=crop&q=80&w=800`
-    },
-    {
-      title: 'Web3 Solution Design',
-      jpTitle: 'Web3ファンコミュニティ設計',
-      category: 'Tech Support',
-      description: 'NFTやトークンを活用した新しい推し活の形を提案。アーティストとファンの直接的な繋がりを技術で支援。',
-      year: '2023',
-      image: `${ASSETS_BASE_URL}/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&q=80&w=800`
     }
   ],
 

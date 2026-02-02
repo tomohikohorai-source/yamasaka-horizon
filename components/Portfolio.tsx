@@ -47,7 +47,6 @@ export const Portfolio: React.FC<PortfolioProps> = ({ onSelect, onViewAll }) => 
                 <h3 className="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
                   {project.title}
                 </h3>
-                <span className="text-xs font-mono text-slate-400">{project.year}</span>
               </div>
               <p className="text-xs text-blue-500 font-bold mb-3 tracking-wider">{project.jpTitle}</p>
               <p className="text-sm text-slate-500 leading-relaxed font-light">
