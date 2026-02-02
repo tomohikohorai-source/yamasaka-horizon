@@ -16,8 +16,11 @@ const isWithinLastMonth = (dateStr: string) => {
 };
 
 export const News: React.FC<NewsProps> = ({ onViewAll, onSelect }) => {
-  // Show only first 3 on top page
-  const displayNews = siteContent.news.slice(0, 3);
+  // 日付の新しい順にソートし、最初の3件のみ表示
+  const sortedNews = [...siteContent.news].sort((a, b) => {
+    return new Date(b.date.replace(/\./g, '/')).getTime() - new Date(a.date.replace(/\./g, '/')).getTime();
+  });
+  const displayNews = sortedNews.slice(0, 3);
 
   return (
     <div className="max-w-7xl mx-auto px-6 md:px-12">

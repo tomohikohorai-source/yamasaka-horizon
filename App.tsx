@@ -21,6 +21,29 @@ const isWithinLastMonth = (dateStr: string) => {
   return diffDays <= 30;
 };
 
+/**
+ * テキスト内のURLを検出し、リンクとしてレンダリングする
+ */
+const renderTextWithLinks = (text: string) => {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  return text.split(urlRegex).map((part, i) => {
+    if (part.match(urlRegex)) {
+      return (
+        <a 
+          key={i} 
+          href={part} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="text-blue-600 hover:underline break-all font-medium"
+        >
+          {part}
+        </a>
+      );
+    }
+    return part;
+  });
+};
+
 // --- Sub-Page Components ---
 
 const PageLayout: React.FC<{ title: string, subtitle: string, onBack: () => void, children?: React.ReactNode }> = ({ children, title, subtitle, onBack }) => (
@@ -89,14 +112,27 @@ const NewsDetailPage = ({ id, onBack, onNavigate }: { id: string, onBack: () => 
         <h1 className="text-3xl md:text-5xl font-bold mb-8 tracking-tighter text-slate-900 leading-tight">{news.title}</h1>
       </div>
 
-      <div className="aspect-video bg-slate-100 rounded-3xl mb-12 overflow-hidden shadow-2xl">
-        <img src={news.image} className="w-full h-full object-cover" alt={news.title} />
+      {/* 
+        画像が切れないように修正:
+        aspect-videoを削除し、flexコンテナで中央寄せ。
+        max-h-[75vh]を設定して縦長画像でもスクロールしやすく、かつ全体が見えるようにobject-containを使用。
+      */}
+      <div className="bg-slate-100 rounded-3xl mb-12 overflow-hidden shadow-2xl flex items-center justify-center min-h-[300px] md:min-h-[450px]">
+        <img 
+          src={news.image} 
+          className="max-w-full max-h-[75vh] w-auto h-auto object-contain" 
+          alt={news.title}
+          onError={(e) => {
+            // 画像読み込みエラー時のフォールバック
+            (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&q=80&w=1200";
+          }}
+        />
       </div>
 
       <div className="prose prose-lg prose-slate max-w-none">
-        <p className="text-slate-600 leading-relaxed text-lg whitespace-pre-line">
-          {news.content}
-        </p>
+        <div className="text-slate-600 leading-relaxed text-lg whitespace-pre-line">
+          {renderTextWithLinks(news.content)}
+        </div>
       </div>
       
       <div className="mt-20 pt-12 border-t border-slate-100">
