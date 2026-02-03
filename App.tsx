@@ -64,7 +64,7 @@ const PageLayout: React.FC<{ title: string, subtitle: string, onBack: () => void
 );
 
 const NewsListPage = ({ onBack, onSelect }: { onBack: () => void, onSelect: (id: string) => void }) => (
-  <PageLayout title="News List" subtitle="山坂ホライゾンの最新情報とお知らせ" onBack={onBack}>
+  <PageLayout title="News List" subtitle="山坂ホライゾンの最新情報とおお知らせ" onBack={onBack}>
     <div className="space-y-8">
       {siteContent.news.map((item, i) => {
         const isNew = isWithinLastMonth(item.date);
@@ -112,18 +112,12 @@ const NewsDetailPage = ({ id, onBack, onNavigate }: { id: string, onBack: () => 
         <h1 className="text-3xl md:text-5xl font-bold mb-8 tracking-tighter text-slate-900 leading-tight">{news.title}</h1>
       </div>
 
-      {/* 
-        画像が切れないように修正:
-        aspect-videoを削除し、flexコンテナで中央寄せ。
-        max-h-[75vh]を設定して縦長画像でもスクロールしやすく、かつ全体が見えるようにobject-containを使用。
-      */}
       <div className="bg-slate-100 rounded-3xl mb-12 overflow-hidden shadow-2xl flex items-center justify-center min-h-[300px] md:min-h-[450px]">
         <img 
           src={news.image} 
           className="max-w-full max-h-[75vh] w-auto h-auto object-contain" 
           alt={news.title}
           onError={(e) => {
-            // 画像読み込みエラー時のフォールバック
             (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&q=80&w=1200";
           }}
         />
@@ -317,7 +311,7 @@ const App: React.FC = () => {
               <Hero />
             </section>
             
-            <section id="news" className="py-24 bg-white">
+            <section id="news" className="pt-8 pb-24 bg-white">
               <News 
                 onViewAll={() => handleNavigate('news-list')} 
                 onSelect={(id) => handleNavigate('news-detail', id)} 
