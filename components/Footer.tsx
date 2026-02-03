@@ -52,7 +52,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         </div>
 
         <div className="pt-12 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 text-slate-600 text-[10px] tracking-widest font-medium">
-          <div>© 2024 {siteContent.brand.name} {siteContent.brand.nameAccent}. ALL RIGHTS RESERVED.</div>
+          <div>© 2023 {siteContent.brand.name} {siteContent.brand.nameAccent} Co., Ltd. ALL RIGHTS RESERVED.</div>
           <div className="flex space-x-8">
             <span className="cursor-default">DOMAINS & HOSTING</span>
             <span className="cursor-pointer hover:text-white transition-colors" onClick={() => onNavigate('sitemap')}>SITEMAP</span>
