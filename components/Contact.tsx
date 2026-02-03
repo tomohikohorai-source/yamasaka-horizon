@@ -24,15 +24,17 @@ export const Contact: React.FC = () => {
 
     const payload = {
       access_key: accessKey,
-      subject: `【Webサイトより】${formData.name}様からのお問い合わせ`,
-      from_name: "山坂ホライゾン 公式サイト",
-      // Web3Formsが認識する標準的なフィールド名
-      name: formData.name,
-      email: formData.email,
-      company: formData.company,
-      department: formData.department,
-      position: formData.position,
-      message: formData.message,
+      subject: "ヤマサカホライズン公式サイト",
+      from_name: "ヤマサカホライゾン 公式サイト",
+      // メールの受信時に日本語で項目が表示されるようにキー名を日本語に設定
+      "お名前": formData.name,
+      "メールアドレス": formData.email,
+      "会社・団体名": formData.company,
+      "部署名": formData.department,
+      "役職名": formData.position,
+      "お問い合わせ内容": formData.message,
+      // replytoを設定することで返信先をユーザーのアドレスに指定
+      replyto: formData.email,
     };
 
     try {
@@ -64,7 +66,7 @@ export const Contact: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    // Inputのname属性を小文字にしてformDataに反映
+    // Inputのname属性（小文字）をformDataのキーにマッピング
     setFormData(prev => ({ ...prev, [name.toLowerCase()]: value }));
   };
 
@@ -80,7 +82,7 @@ export const Contact: React.FC = () => {
         </div>
         <h2 className="text-4xl font-bold mb-4">送信が完了しました</h2>
         <p className="text-slate-400 mb-12">
-          お問い合わせありがとうございます。内容を確認次第、<br className="hidden md:block"/>{siteContent.brand.name}担当者よりご連絡させていただきます。
+          お問い合わせありがとうございます。内容を確認次第、担当者よりご連絡させていただきます。
         </p>
         <button 
           onClick={() => setStatus('idle')}
