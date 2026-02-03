@@ -11,7 +11,7 @@ export const Hero: React.FC = () => {
         <img 
           src={hero.image} 
           alt="Hero Background" 
-          className="w-full h-full object-cover opacity-20"
+          className="w-full h-full object-cover opacity-30"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-white via-white/40 to-white"></div>
       </div>
