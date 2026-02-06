@@ -12,7 +12,7 @@ export const siteContent = {
   brand: {
     name: "YAMASAKA",
     nameAccent: "HORIZON",
-    description: "ファンの熱狂を価値に変える、\nファン中心のマーケティング企業。"
+    description: "ファンの熱狂を価値に変える、\nファン中心 marketing 企業。"
   },
   
   hero: {
@@ -60,6 +60,15 @@ export const siteContent = {
       type: 'Education',
       image: `${GOOGLE_DRIVE_BASE}1ymeWJOGXCIcLXDeK8I3DzgL5DxL-rVJm`,
       content: '2025年9月22日（月）より、代表取締役社長の洞井が宝塚医療大学 観光学部にて、非常勤講師としてスポーツツーリズムに関する講義を担当することになりました。'
+    },
+    {
+      id: 'news-013',
+      date: '2025.08.01',
+      category: 'INFO',
+      title: '福岡県大刀洗町とのアドバイザー契約を締結しました',
+      type: 'Announcement',
+      image: `${GOOGLE_DRIVE_BASE}1SuUapu-34ogUEXbniz63fIdfXTWTz9Pc`,
+      content: '2025年8月、福岡県大刀洗町とのアドバイザー契約を締結しました。\n\n大刀洗町にある公共施設予約システムのオンライン化に向けて、当社は、現状の予約・運用フローの分析や、オンライン化に向けた設計の支援を通じて、生活者の利便性向上や業務の効率化を目指します。'
     },
     {
       id: 'news-008',
@@ -160,7 +169,7 @@ export const siteContent = {
       longDescription: 'デジタルテクノロジーは、ファンとコンテンツの距離を劇的に縮める可能性を秘めています。私たちは、単なるシステムの導入にとどまらず、ユーザー体験（UX）を最優先に考えたDXを提案します。スタジアムでのスマート体験から、日常的なファンアプリの活用まで、オフラインとオンラインをシームレスに繋ぎ、運営の効率化とファンの満足度向上を同時に実現します。',
       image: `${ASSETS_BASE_URL}/photo-1551650975-87deedd944c3?auto=format&fit=crop&q=80&w=1200`, 
       features: [
-        'ファンデータを活用したCRM基盤の要件定義と導入支援',
+        'ファンデータを活用した CRM 基盤の要件定義と導入支援',
         'スタジアム・施設におけるDX化推進',
         'オフィシャルアプリ・WebサイトのUX/UI改善コンサルティング',
         '業務効率化を実現するITツールの導入・定着支援',

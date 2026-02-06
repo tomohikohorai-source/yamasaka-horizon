@@ -64,7 +64,7 @@ const PageLayout: React.FC<{ title: string, subtitle: string, onBack: () => void
 );
 
 const NewsListPage = ({ onBack, onSelect }: { onBack: () => void, onSelect: (id: string) => void }) => (
-  <PageLayout title="News List" subtitle="山坂ホライゾンの最新情報とおお知らせ" onBack={onBack}>
+  <PageLayout title="News List" subtitle="山坂ホライゾンの最新情報とお知らせ" onBack={onBack}>
     <div className="space-y-8">
       {siteContent.news.map((item, i) => {
         const isNew = isWithinLastMonth(item.date);
@@ -95,27 +95,29 @@ const NewsDetailPage = ({ id, onBack, onNavigate }: { id: string, onBack: () => 
   const nextArticle = siteContent.news[currentIndex - 1]; 
 
   return (
-    <div className="pt-32 pb-20 px-6 max-w-4xl mx-auto min-h-screen animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <button onClick={onBack} className="text-blue-600 font-bold text-xs tracking-widest mb-12 flex items-center group">
-        <svg className="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-        BACK TO NEWS
-      </button>
-      
-      <div className="mb-12">
-        <div className="flex items-center space-x-4 mb-6">
-          <span className="text-sm font-mono text-slate-400">{news.date}</span>
-          <span className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100 uppercase">{news.type}</span>
-          {isWithinLastMonth(news.date) && (
-            <span className="bg-pink-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full animate-pulse">NEW</span>
-          )}
+    <div className="pt-32 pb-20 px-6 max-w-5xl mx-auto min-h-screen animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="max-w-4xl mx-auto">
+        <button onClick={onBack} className="text-blue-600 font-bold text-xs tracking-widest mb-12 flex items-center group">
+          <svg className="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+          BACK TO NEWS
+        </button>
+        
+        <div className="mb-12">
+          <div className="flex items-center space-x-4 mb-6">
+            <span className="text-sm font-mono text-slate-400">{news.date}</span>
+            <span className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100 uppercase">{news.type}</span>
+            {isWithinLastMonth(news.date) && (
+              <span className="bg-pink-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full animate-pulse">NEW</span>
+            )}
+          </div>
+          <h1 className="text-3xl md:text-5xl font-bold mb-8 tracking-tighter text-slate-900 leading-tight">{news.title}</h1>
         </div>
-        <h1 className="text-3xl md:text-5xl font-bold mb-8 tracking-tighter text-slate-900 leading-tight">{news.title}</h1>
       </div>
 
-      <div className="bg-slate-100 rounded-3xl mb-12 overflow-hidden shadow-2xl flex items-center justify-center min-h-[300px] md:min-h-[450px]">
+      <div className="bg-slate-100 rounded-3xl mb-12 overflow-hidden shadow-2xl flex items-center justify-center min-h-[350px] md:min-h-[550px]">
         <img 
           src={news.image} 
-          className="max-w-full max-h-[75vh] w-auto h-auto object-contain" 
+          className="max-w-full max-h-[85vh] w-auto h-auto object-contain" 
           alt={news.title}
           onError={(e) => {
             (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&q=80&w=1200";
@@ -123,48 +125,50 @@ const NewsDetailPage = ({ id, onBack, onNavigate }: { id: string, onBack: () => 
         />
       </div>
 
-      <div className="prose prose-lg prose-slate max-w-none">
-        <div className="text-slate-600 leading-relaxed text-lg whitespace-pre-line">
-          {renderTextWithLinks(news.content)}
+      <div className="max-w-4xl mx-auto">
+        <div className="prose prose-lg prose-slate max-w-none">
+          <div className="text-slate-600 leading-relaxed text-lg whitespace-pre-line">
+            {renderTextWithLinks(news.content)}
+          </div>
         </div>
-      </div>
-      
-      <div className="mt-20 pt-12 border-t border-slate-100">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-          {prevArticle ? (
-            <button 
-              onClick={() => onNavigate('news-detail', prevArticle.id)}
-              className="group p-6 bg-slate-50 hover:bg-white border border-slate-100 rounded-2xl transition-all text-left"
-            >
-              <div className="text-[10px] font-bold text-slate-400 tracking-widest mb-2 flex items-center">
-                <svg className="w-3 h-3 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-                PREVIOUS
-              </div>
-              <div className="text-sm font-bold text-slate-800 line-clamp-1 group-hover:text-blue-600 transition-colors">{prevArticle.title}</div>
-            </button>
-          ) : <div className="hidden md:block"></div>}
+        
+        <div className="mt-20 pt-12 border-t border-slate-100">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            {prevArticle ? (
+              <button 
+                onClick={() => onNavigate('news-detail', prevArticle.id)}
+                className="group p-6 bg-slate-50 hover:bg-white border border-slate-100 rounded-2xl transition-all text-left"
+              >
+                <div className="text-[10px] font-bold text-slate-400 tracking-widest mb-2 flex items-center">
+                  <svg className="w-3 h-3 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+                  PREVIOUS
+                </div>
+                <div className="text-sm font-bold text-slate-800 line-clamp-1 group-hover:text-blue-600 transition-colors">{prevArticle.title}</div>
+              </button>
+            ) : <div className="hidden md:block"></div>}
 
-          {nextArticle ? (
-            <button 
-              onClick={() => onNavigate('news-detail', nextArticle.id)}
-              className="group p-6 bg-slate-50 hover:bg-white border border-slate-100 rounded-2xl transition-all text-right"
-            >
-              <div className="text-[10px] font-bold text-slate-400 tracking-widest mb-2 flex items-center justify-end">
-                NEXT
-                <svg className="w-3 h-3 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-              </div>
-              <div className="text-sm font-bold text-slate-800 line-clamp-1 group-hover:text-blue-600 transition-colors">{nextArticle.title}</div>
-            </button>
-          ) : <div className="hidden md:block"></div>}
-        </div>
+            {nextArticle ? (
+              <button 
+                onClick={() => onNavigate('news-detail', nextArticle.id)}
+                className="group p-6 bg-slate-50 hover:bg-white border border-slate-100 rounded-2xl transition-all text-right"
+              >
+                <div className="text-[10px] font-bold text-slate-400 tracking-widest mb-2 flex items-center justify-end">
+                  NEXT
+                  <svg className="w-3 h-3 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                </div>
+                <div className="text-sm font-bold text-slate-800 line-clamp-1 group-hover:text-blue-600 transition-colors">{nextArticle.title}</div>
+              </button>
+            ) : <div className="hidden md:block"></div>}
+          </div>
 
-        <div className="flex justify-center">
-          <button 
-            onClick={onBack}
-            className="px-10 py-4 bg-slate-900 text-white text-xs font-bold tracking-[0.2em] hover:bg-blue-600 transition-all rounded-full shadow-xl"
-          >
-            NEWS LIST / 一覧に戻る
-          </button>
+          <div className="flex justify-center">
+            <button 
+              onClick={onBack}
+              className="px-10 py-4 bg-slate-900 text-white text-xs font-bold tracking-[0.2em] hover:bg-blue-600 transition-all rounded-full shadow-xl"
+            >
+              NEWS LIST / 一覧に戻る
+            </button>
+          </div>
         </div>
       </div>
     </div>
