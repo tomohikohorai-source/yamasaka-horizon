@@ -12,7 +12,7 @@ export const siteContent = {
   brand: {
     name: "YAMASAKA",
     nameAccent: "HORIZON",
-    description: "ファンの熱狂を価値に変える、\nファン中心 marketing 企業。"
+    description: "ファンの熱狂を価値に変える、\nファン中心のマーケティング企業。"
   },
   
   hero: {
