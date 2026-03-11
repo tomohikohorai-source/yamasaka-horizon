@@ -64,7 +64,7 @@ const PageLayout: React.FC<{ title: string, subtitle: string, onBack: () => void
 );
 
 const NewsListPage = ({ onBack, onSelect }: { onBack: () => void, onSelect: (id: string) => void }) => (
-  <PageLayout title="News List" subtitle="山坂ホライゾンの最新情報とお知らせ" onBack={onBack}>
+  <PageLayout title="News List" subtitle="お知らせ一覧" onBack={onBack}>
     <div className="space-y-8">
       {siteContent.news.map((item, i) => {
         const isNew = isWithinLastMonth(item.date);
