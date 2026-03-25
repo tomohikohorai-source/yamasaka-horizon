@@ -247,6 +247,7 @@ const SitemapPage = ({ onBack, onNavigate }: { onBack: () => void, onNavigate: (
           <li><button onClick={() => onNavigate('terms-of-service')} className="hover:text-blue-600 transition-colors text-left w-full">サイト利用条件</button></li>
           <li><button onClick={() => onNavigate('privacy-policy')} className="hover:text-blue-600 transition-colors text-left w-full">プライバシーポリシー</button></li>
           <li><button onClick={() => onNavigate('cookie-policy')} className="hover:text-blue-600 transition-colors text-left w-full">クッキーポリシー</button></li>
+          <li><button onClick={() => onNavigate('specified-commercial-transactions')} className="hover:text-blue-600 transition-colors text-left w-full">Specified Commercial Transactions</button></li>
           <li><button onClick={() => onNavigate('sitemap')} className="hover:text-blue-600 transition-colors font-bold text-blue-600 text-left w-full">サイトマップ</button></li>
         </ul>
       </div>
@@ -404,6 +405,55 @@ Cookieとは、ユーザーがウェブサイトを閲覧した際に、ユー�
 6. クッキーポリシーの変更
 当サイトは、法令の変更やサービス内容の変更等に応じて、本クッキーポリシーを予告なく変更することがあります。
 変更後の内容は、本サイト上に掲載した時点で効力を有します。`} 
+          onBack={() => setCurrentView('home')} 
+        />;
+      case 'specified-commercial-transactions':
+        return <LegalPage 
+          title="Specified Commercial Transactions" 
+          content={`特定商取引法に基づく表記（Specified Commercial Transactions Act）
+
+販売業者
+株式会社ヤマサカホライズン
+
+代表責任者
+代表取締役社長 洞井 知彦
+
+所在地
+〒546-0035 大阪府大阪市東住吉区山坂5-15-12
+
+電話番号
+お問い合わせはメールにて承ります。電話番号はご請求をいただいた場合に開示いたします。
+※受付時間：平日 10:00〜18:00（土日祝日を除く）
+
+メールアドレス
+support@yamasakahorizon.com
+
+販売価格
+商品・サービスごとに個別に提示、または各お申し込みページに表示された価格に基づきます。
+※応援広告等のプロジェクト案件については、事前の御見積書にて確定いたします。
+
+商品代金以外の必要料金
+・振込手数料
+・インターネット接続料金その他の電気通信回線の通信に関する費用（お客様のご負担となります）
+・イベント参加時の現地までの交通費・宿泊費
+
+支払方法
+・クレジットカード決済
+・銀行振込
+・その他、各お申し込み画面でご案内する決済方法
+
+支払時期
+・クレジットカード：各カード会社の引き落とし日
+・銀行振込：別途合意した期日までにお振込みください。
+
+サービス提供の時期
+・応援広告：媒体社との調整による所定の掲出期間
+・イベント：当該イベント開催日
+
+キャンセル・返品（返金について）
+商品の性質上、決済完了後のお客様都合によるキャンセル・返品・返金には応じかねます。
+イベントの中止や、弊社都合によるサービス提供不能が生じた場合に限り、別途定める規約に基づき返金対応を行います。
+掲出内容の不備等、弊社に過失がある場合は速やかに修正または代替措置を講じます。`} 
           onBack={() => setCurrentView('home')} 
         />;
       default:

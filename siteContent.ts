@@ -31,7 +31,7 @@ export const siteContent = {
       category: 'EVENT',
       title: '3月31日（火）「第5回 スポーツ・エンタメ交流会」を主催します',
       type: 'Announcement',
-      image: `${GOOGLE_DRIVE_BASE}1MrAqSm5CgbF0hp9A3Gh7ZNu5OmXJ0fMO`,
+      image: `${GOOGLE_DRIVE_BASE}1bGZYRRlLz9Exh5QQuxSjrItv5zDPBViy`,
       content: '3月31日（火）「第5回 スポーツ・エンタメ交流会」を開催することを決定しました。\n\n過去の開催では、プロ/アマスポーツチーム、スポーツテック企業、スポーツ用具メーカースポーツアパレル会社、スポーツ/エンタメ施設管理社、イベント運営会社、広告代理店、自治体、スポーツアナウンサー、代理人、著名スポーツ系インフルエンサー、大学教授/職員などが参加されました。\n\n詳細および参加の申込は下記よりご確認ください。\n\n第5回 スポーツ・エンタメ交流会（主催：ヤマサカホライズン）\n■日時\n3/31(火)19:00~21:00\n■場所\nβ本町橋2階スペース\nhttps://hommachibashi.jp/access/\n「堺筋本町駅」1番出口より徒歩6分\n「谷町四丁目駅」4番出口より徒歩8分\n「北浜駅」5番出口より徒歩10分\n■チャージ料\n1,000円（現地で現金支払い）\n※領収書の発行も可\n■お願い\nドリンクおよびフードは参加者各々で持ち込み式です。\nご自身の分のみで構いませんので、ご自由にお飲み物やおつまみをご持参ください。\n■参加受付フォーム\nご参加の方は下記よりお申し込みください。\n※恐れ入りますが、同一団体からは最大2名までのご参加でお願いいたします。\nhttps://docs.google.com/forms/d/e/1FAIpQLScUyF01kJdyEnATBDLq1U0j9LNxviMyqMtNkKc6NX37QvlduQ/viewform?usp=dialog'
     },
     {
