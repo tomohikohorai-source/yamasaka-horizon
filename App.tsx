@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, useNavigate, useParams, useLocation } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { News } from './components/News';
@@ -21,9 +22,6 @@ const isWithinLastMonth = (dateStr: string) => {
   return diffDays <= 30;
 };
 
-/**
- * テキスト内のURLを検出し、リンクとしてレンダリングする
- */
 const renderTextWithLinks = (text: string) => {
   const urlRegex = /(https?:\/\/[^\s]+)/g;
   return text.split(urlRegex).map((part, i) => {
@@ -44,7 +42,7 @@ const renderTextWithLinks = (text: string) => {
   });
 };
 
-// --- Sub-Page Components ---
+// --- Layout Components ---
 
 const PageLayout: React.FC<{ title: string, subtitle: string, onBack: () => void, children?: React.ReactNode }> = ({ children, title, subtitle, onBack }) => (
   <div className="pt-32 pb-20 px-6 max-w-7xl mx-auto min-h-screen animate-in fade-in duration-700">
@@ -63,29 +61,36 @@ const PageLayout: React.FC<{ title: string, subtitle: string, onBack: () => void
   </div>
 );
 
-const NewsListPage = ({ onBack, onSelect }: { onBack: () => void, onSelect: (id: string) => void }) => (
-  <PageLayout title="News List" subtitle="お知らせ一覧" onBack={onBack}>
-    <div className="space-y-8">
-      {siteContent.news.map((item, i) => {
-        const isNew = isWithinLastMonth(item.date);
-        return (
-          <div key={i} onClick={() => onSelect(item.id)} className="group border-b border-slate-100 pb-8 hover:bg-slate-50/50 transition-colors p-6 rounded-2xl cursor-pointer relative">
-            <div className="flex items-center space-x-4 mb-3">
-              <span className="text-xs font-mono text-slate-400">{item.date}</span>
-              <span className="text-[10px] font-bold text-blue-500 border border-blue-500 px-2 py-0.5 rounded uppercase">{item.category}</span>
-              {isNew && (
-                <span className="bg-pink-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full animate-pulse">NEW</span>
-              )}
-            </div>
-            <h3 className="text-lg font-bold text-slate-800 group-hover:text-blue-600 transition-colors">{item.title}</h3>
-          </div>
-        );
-      })}
-    </div>
-  </PageLayout>
-);
+// --- Page Components ---
 
-const NewsDetailPage = ({ id, onBack, onNavigate }: { id: string, onBack: () => void, onNavigate: (view: string, titleOrId?: string) => void }) => {
+const NewsListPage = () => {
+  const navigate = useNavigate();
+  return (
+    <PageLayout title="News List" subtitle="お知らせ一覧" onBack={() => navigate('/')}>
+      <div className="space-y-8">
+        {siteContent.news.map((item, i) => {
+          const isNew = isWithinLastMonth(item.date);
+          return (
+            <div key={i} onClick={() => navigate(`/news/${item.id}`)} className="group border-b border-slate-100 pb-8 hover:bg-slate-50/50 transition-colors p-6 rounded-2xl cursor-pointer relative">
+              <div className="flex items-center space-x-4 mb-3">
+                <span className="text-xs font-mono text-slate-400">{item.date}</span>
+                <span className="text-[10px] font-bold text-blue-500 border border-blue-500 px-2 py-0.5 rounded uppercase">{item.category}</span>
+                {isNew && (
+                  <span className="bg-pink-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full animate-pulse">NEW</span>
+                )}
+              </div>
+              <h3 className="text-lg font-bold text-slate-800 group-hover:text-blue-600 transition-colors">{item.title}</h3>
+            </div>
+          );
+        })}
+      </div>
+    </PageLayout>
+  );
+};
+
+const NewsDetailPage = () => {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const currentIndex = siteContent.news.findIndex(n => n.id === id);
   const news = siteContent.news[currentIndex];
   
@@ -97,7 +102,7 @@ const NewsDetailPage = ({ id, onBack, onNavigate }: { id: string, onBack: () => 
   return (
     <div className="pt-32 pb-20 px-6 max-w-5xl mx-auto min-h-screen animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="max-w-4xl mx-auto">
-        <button onClick={onBack} className="text-blue-600 font-bold text-xs tracking-widest mb-12 flex items-center group">
+        <button onClick={() => navigate('/news')} className="text-blue-600 font-bold text-xs tracking-widest mb-12 flex items-center group">
           <svg className="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
           BACK TO NEWS
         </button>
@@ -136,7 +141,7 @@ const NewsDetailPage = ({ id, onBack, onNavigate }: { id: string, onBack: () => 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
             {prevArticle ? (
               <button 
-                onClick={() => onNavigate('news-detail', prevArticle.id)}
+                onClick={() => navigate(`/news/${prevArticle.id}`)}
                 className="group p-6 bg-slate-50 hover:bg-white border border-slate-100 rounded-2xl transition-all text-left"
               >
                 <div className="text-[10px] font-bold text-slate-400 tracking-widest mb-2 flex items-center">
@@ -149,7 +154,7 @@ const NewsDetailPage = ({ id, onBack, onNavigate }: { id: string, onBack: () => 
 
             {nextArticle ? (
               <button 
-                onClick={() => onNavigate('news-detail', nextArticle.id)}
+                onClick={() => navigate(`/news/${nextArticle.id}`)}
                 className="group p-6 bg-slate-50 hover:bg-white border border-slate-100 rounded-2xl transition-all text-right"
               >
                 <div className="text-[10px] font-bold text-slate-400 tracking-widest mb-2 flex items-center justify-end">
@@ -163,7 +168,7 @@ const NewsDetailPage = ({ id, onBack, onNavigate }: { id: string, onBack: () => 
 
           <div className="flex justify-center">
             <button 
-              onClick={onBack}
+              onClick={() => navigate('/news')}
               className="px-10 py-4 bg-slate-900 text-white text-xs font-bold tracking-[0.2em] hover:bg-blue-600 transition-all rounded-full shadow-xl"
             >
               NEWS LIST / 一覧に戻る
@@ -175,15 +180,17 @@ const NewsDetailPage = ({ id, onBack, onNavigate }: { id: string, onBack: () => 
   );
 };
 
-const ServiceDetailPage = ({ id, onBack }: { id: string, onBack: () => void }) => {
+const ServiceDetailPage = () => {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const service = siteContent.services.find(s => s.id === id || s.title === id);
   if (!service) return null;
 
   return (
     <div className="pt-32 pb-20 px-6 max-w-5xl mx-auto min-h-screen animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <button onClick={onBack} className="text-blue-600 font-bold text-xs tracking-widest mb-12 flex items-center group">
+      <button onClick={() => navigate(-1)} className="text-blue-600 font-bold text-xs tracking-widest mb-12 flex items-center group">
         <svg className="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-        BACK TO SERVICES
+        BACK
       </button>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start mb-20">
@@ -219,41 +226,44 @@ const ServiceDetailPage = ({ id, onBack }: { id: string, onBack: () => void }) =
       </div>
 
       <div className="mt-20 flex justify-center">
-        <a href="#contact" onClick={() => onBack()} className="px-12 py-5 bg-slate-900 text-white text-xs font-bold tracking-[0.3em] hover:bg-blue-600 transition-all rounded-full shadow-2xl">
+        <button onClick={() => navigate('/contact')} className="px-12 py-5 bg-slate-900 text-white text-xs font-bold tracking-[0.3em] hover:bg-blue-600 transition-all rounded-full shadow-2xl">
           CONTACT US / お問い合わせ
-        </a>
+        </button>
       </div>
     </div>
   );
 };
 
-const SitemapPage = ({ onBack, onNavigate }: { onBack: () => void, onNavigate: (view: string, titleOrId?: string) => void }) => (
-  <PageLayout title="Sitemap" subtitle="サイト構成・主要ページ一覧" onBack={onBack}>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-      <div className="space-y-6">
-        <h3 className="text-xl font-bold border-b border-slate-100 pb-2">Main Content</h3>
-        <ul className="space-y-3 text-slate-600 text-sm">
-          <li><button onClick={() => onNavigate('home')} className="hover:text-blue-600 transition-colors text-left w-full">ホーム</button></li>
-          <li><button onClick={() => onNavigate('about-page')} className="hover:text-blue-600 transition-colors text-left w-full">私たちについて (About)</button></li>
-          <li><button onClick={() => onNavigate('services-list')} className="hover:text-blue-600 transition-colors text-left w-full">事業内容 (Services)</button></li>
-          <li><button onClick={() => onNavigate('portfolio-list')} className="hover:text-blue-600 transition-colors text-left w-full">実績紹介 (Portfolio)</button></li>
-          <li><button onClick={() => onNavigate('news-list')} className="hover:text-blue-600 transition-colors text-left w-full">最新情報 (News)</button></li>
-          <li><button onClick={() => onNavigate('contact-page')} className="hover:text-blue-600 transition-colors text-left w-full">お問い合わせ (Contact)</button></li>
-        </ul>
+const SitemapPage = () => {
+  const navigate = useNavigate();
+  return (
+    <PageLayout title="Sitemap" subtitle="サイト構成・主要ページ一覧" onBack={() => navigate('/')}>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+        <div className="space-y-6">
+          <h3 className="text-xl font-bold border-b border-slate-100 pb-2">Main Content</h3>
+          <ul className="space-y-3 text-slate-600 text-sm">
+            <li><button onClick={() => navigate('/')} className="hover:text-blue-600 transition-colors text-left w-full">ホーム</button></li>
+            <li><button onClick={() => navigate('/about')} className="hover:text-blue-600 transition-colors text-left w-full">私たちについて (About)</button></li>
+            <li><button onClick={() => navigate('/services')} className="hover:text-blue-600 transition-colors text-left w-full">事業内容 (Services)</button></li>
+            <li><button onClick={() => navigate('/portfolio')} className="hover:text-blue-600 transition-colors text-left w-full">実績紹介 (Portfolio)</button></li>
+            <li><button onClick={() => navigate('/news')} className="hover:text-blue-600 transition-colors text-left w-full">最新情報 (News)</button></li>
+            <li><button onClick={() => navigate('/contact')} className="hover:text-blue-600 transition-colors text-left w-full">お問い合わせ (Contact)</button></li>
+          </ul>
+        </div>
+        <div className="space-y-6">
+          <h3 className="text-xl font-bold border-b border-slate-100 pb-2">Information</h3>
+          <ul className="space-y-3 text-slate-600 text-sm">
+            <li><button onClick={() => navigate('/terms-of-service')} className="hover:text-blue-600 transition-colors text-left w-full">サイト利用条件</button></li>
+            <li><button onClick={() => navigate('/privacy-policy')} className="hover:text-blue-600 transition-colors text-left w-full">プライバシーポリシー</button></li>
+            <li><button onClick={() => navigate('/cookie-policy')} className="hover:text-blue-600 transition-colors text-left w-full">クッキーポリシー</button></li>
+            <li><button onClick={() => navigate('/specified-commercial-transactions')} className="hover:text-blue-600 transition-colors text-left w-full">Specified Commercial Transactions</button></li>
+            <li><button onClick={() => navigate('/sitemap')} className="hover:text-blue-600 transition-colors font-bold text-blue-600 text-left w-full">サイトマップ</button></li>
+          </ul>
+        </div>
       </div>
-      <div className="space-y-6">
-        <h3 className="text-xl font-bold border-b border-slate-100 pb-2">Information</h3>
-        <ul className="space-y-3 text-slate-600 text-sm">
-          <li><button onClick={() => onNavigate('terms-of-service')} className="hover:text-blue-600 transition-colors text-left w-full">サイト利用条件</button></li>
-          <li><button onClick={() => onNavigate('privacy-policy')} className="hover:text-blue-600 transition-colors text-left w-full">プライバシーポリシー</button></li>
-          <li><button onClick={() => onNavigate('cookie-policy')} className="hover:text-blue-600 transition-colors text-left w-full">クッキーポリシー</button></li>
-          <li><button onClick={() => onNavigate('specified-commercial-transactions')} className="hover:text-blue-600 transition-colors text-left w-full">Specified Commercial Transactions</button></li>
-          <li><button onClick={() => onNavigate('sitemap')} className="hover:text-blue-600 transition-colors font-bold text-blue-600 text-left w-full">サイトマップ</button></li>
-        </ul>
-      </div>
-    </div>
-  </PageLayout>
-);
+    </PageLayout>
+  );
+};
 
 const LegalPage = ({ title, content, onBack }: { title: string, content: string, onBack: () => void }) => (
   <PageLayout title={title} subtitle="Legal Information" onBack={onBack}>
@@ -265,10 +275,65 @@ const LegalPage = ({ title, content, onBack }: { title: string, content: string,
   </PageLayout>
 );
 
+// --- Scroll Helpers ---
+
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+};
+
+const ScrollToHash = () => {
+  const { hash } = useLocation();
+  useEffect(() => {
+    if (hash) {
+      const element = document.getElementById(hash.replace('#', ''));
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [hash]);
+  return null;
+};
+
+const HomePage = () => {
+  const navigate = useNavigate();
+  return (
+    <main className="animate-in fade-in duration-1000">
+      <section id="hero">
+        <Hero />
+      </section>
+      
+      <section id="news" className="pt-8 pb-24 bg-white">
+        <News 
+          onViewAll={() => navigate('/news')} 
+          onSelect={(id) => navigate(`/news/${id}`)} 
+        />
+      </section>
+
+      <section id="services" className="py-32 bg-slate-50">
+        <Services onSelect={(id) => navigate(`/services/${id}`)} />
+      </section>
+
+      <section id="portfolio" className="py-32 bg-white">
+        <Portfolio onViewAll={() => navigate('/portfolio')} />
+      </section>
+
+      <section id="about" className="py-32 bg-slate-50">
+        <About />
+      </section>
+
+      <section id="contact" className="py-32 bg-slate-900 text-white">
+        <Contact />
+      </section>
+    </main>
+  );
+};
+
 const App: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [currentView, setCurrentView] = useState('home');
-  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   useEffect(() => {
@@ -279,34 +344,26 @@ const App: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleNavigate = (view: string, id?: string) => {
-    setCurrentView(view);
-    setSelectedId(id || null);
-    window.scrollTo(0, 0);
-  };
-
-  const renderContent = () => {
-    switch (currentView) {
-      case 'news-list':
-        return <NewsListPage onBack={() => setCurrentView('home')} onSelect={(id) => handleNavigate('news-detail', id)} />;
-      case 'news-detail':
-        return <NewsDetailPage id={selectedId || ''} onBack={() => setCurrentView('news-list')} onNavigate={handleNavigate} />;
-      case 'service-detail':
-        return <ServiceDetailPage id={selectedId || ''} onBack={() => setCurrentView('home')} />;
-      case 'about-page':
-        return <PageLayout title="About Us" subtitle="熱狂を日常に、ワクワクを未来に。" onBack={() => setCurrentView('home')}><About /></PageLayout>;
-      case 'contact-page':
-        return <PageLayout title="Contact" subtitle="プロジェクトのご相談はこちらから" onBack={() => setCurrentView('home')}><Contact /></PageLayout>;
-      case 'services-list':
-        return <PageLayout title="Services" subtitle="スポーツ・エンタメDXへの挑戦" onBack={() => setCurrentView('home')}><Services onSelect={(id) => handleNavigate('service-detail', id)} /></PageLayout>;
-      case 'portfolio-list':
-        return <PageLayout title="Portfolio" subtitle="これまでの主な実績" onBack={() => setCurrentView('home')}><Portfolio /></PageLayout>;
-      case 'sitemap':
-        return <SitemapPage onBack={() => setCurrentView('home')} onNavigate={handleNavigate} />;
-      case 'privacy-policy':
-        return <LegalPage 
-          title="Privacy Policy" 
-          content={`プライバシーポリシー（Privacy Policy）
+  return (
+    <BrowserRouter>
+      <ScrollToTop />
+      <ScrollToHash />
+      <div className="relative min-h-screen">
+        <NavbarWrapper isScrolled={isScrolled} onSearchToggle={() => setIsSearchOpen(true)} />
+        
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/news" element={<NewsListPage />} />
+          <Route path="/news/:id" element={<NewsDetailPage />} />
+          <Route path="/services" element={<PageLayout title="Services" subtitle="スポーツ・エンタメDXへの挑戦" onBack={() => window.history.back()}><Services onSelect={(id) => window.location.href = `/services/${id}`} /></PageLayout>} />
+          <Route path="/services/:id" element={<ServiceDetailPage />} />
+          <Route path="/portfolio" element={<PageLayout title="Portfolio" subtitle="これまでの主な実績" onBack={() => window.history.back()}><Portfolio /></PageLayout>} />
+          <Route path="/about" element={<PageLayout title="About Us" subtitle="熱狂を日常に、ワクワクを未来に。" onBack={() => window.history.back()}><About /></PageLayout>} />
+          <Route path="/contact" element={<PageLayout title="Contact" subtitle="プロジェクトのご相談はこちらから" onBack={() => window.history.back()}><Contact /></PageLayout>} />
+          <Route path="/sitemap" element={<SitemapPage />} />
+          <Route path="/privacy-policy" element={<LegalPage 
+            title="Privacy Policy" 
+            content={`プライバシーポリシー（Privacy Policy）
 最終更新日：2026年2月3日
 株式会社ヤマサカホライズン（以下「当サイト」）は、ユーザーのプライバシーを尊重し、以下の方針に従って個人情報を取り扱います。
 
@@ -335,12 +392,11 @@ const App: React.FC = () => {
 
 7. プライバシーポリシーの変更
 本ポリシーは予告なく変更することがあります。変更後の内容は本ページに掲載された時点で効力を有します。`} 
-          onBack={() => setCurrentView('home')} 
-        />;
-      case 'terms-of-service':
-        return <LegalPage 
-          title="Terms of Use" 
-          content={`サイト利用条件（Terms of Use）
+            onBack={() => window.history.back()} 
+          />} />
+          <Route path="/terms-of-service" element={<LegalPage 
+            title="Terms of Use" 
+            content={`サイト利用条件（Terms of Use）
 最終更新日：2026年2月3日
 この「サイト利用条件」（以下「本規約」）は、株式会社ヤマサカホライズン（以下「当サイト」）が提供するウェブサイト（https://www.yamasakahorizon.com/ 以下「本サイト」）の利用条件を定めるものです。本サイトを利用するすべての方（以下「ユーザー」）は、本規約に同意したものとみなされます。
 
@@ -362,12 +418,11 @@ const App: React.FC = () => {
 
 5. 規約の変更
 当サイトは、本規約を予告なく変更することがあります。変更後の規約は本サイトに掲載された時点から効力を有します。`} 
-          onBack={() => setCurrentView('home')} 
-        />;
-      case 'cookie-policy':
-        return <LegalPage 
-          title="Cookie Policy" 
-          content={`クッキーポリシー（Cookie Policy）
+            onBack={() => window.history.back()} 
+          />} />
+          <Route path="/cookie-policy" element={<LegalPage 
+            title="Cookie Policy" 
+            content={`クッキーポリシー（Cookie Policy）
 最終更新日：2026年2月3日
 株式会社ヤマサカホライズン（以下「当サイト」）は、ユーザーの利便性向上およびサイト改善のため、Cookie（クッキー）および類似技術を使用しています。本ポリシーでは、Cookieの使用目的および管理方法について説明します。
 
@@ -405,12 +460,11 @@ Cookieとは、ユーザーがウェブサイトを閲覧した際に、ユー�
 6. クッキーポリシーの変更
 当サイトは、法令の変更やサービス内容の変更等に応じて、本クッキーポリシーを予告なく変更することがあります。
 変更後の内容は、本サイト上に掲載した時点で効力を有します。`} 
-          onBack={() => setCurrentView('home')} 
-        />;
-      case 'specified-commercial-transactions':
-        return <LegalPage 
-          title="Specified Commercial Transactions" 
-          content={`特定商取引法に基づく表記（Specified Commercial Transactions Act）
+            onBack={() => window.history.back()} 
+          />} />
+          <Route path="/specified-commercial-transactions" element={<LegalPage 
+            title="Specified Commercial Transactions" 
+            content={`特定商取引法に基づく表記（Specified Commercial Transactions Act）
 
 販売業者
 株式会社ヤマサカホライズン
@@ -454,66 +508,103 @@ support@yamasakahorizon.com
 商品の性質上、決済完了後のお客様都合によるキャンセル・返品・返金には応じかねます。
 イベントの中止や、弊社都合によるサービス提供不能が生じた場合に限り、別途定める規約に基づき返金対応を行います。
 掲出内容の不備等、弊社に過失がある場合は速やかに修正または代替措置を講じます。`} 
-          onBack={() => setCurrentView('home')} 
-        />;
-      default:
-        return (
-          <main className="animate-in fade-in duration-1000">
-            <section id="hero">
-              <Hero />
-            </section>
-            
-            <section id="news" className="pt-8 pb-24 bg-white">
-              <News 
-                onViewAll={() => handleNavigate('news-list')} 
-                onSelect={(id) => handleNavigate('news-detail', id)} 
-              />
-            </section>
+            onBack={() => window.history.back()} 
+          />} />
+        </Routes>
 
-            <section id="services" className="py-32 bg-slate-50">
-              <Services onSelect={(id) => handleNavigate('service-detail', id)} />
-            </section>
+        <FooterWrapper />
+        
+        <CookieBannerWrapper />
 
-            <section id="portfolio" className="py-32 bg-white">
-              <Portfolio onViewAll={() => handleNavigate('portfolio-list')} />
-            </section>
+        {isSearchOpen && (
+          <SearchModalWrapper onClose={() => setIsSearchOpen(false)} />
+        )}
+      </div>
+    </BrowserRouter>
+  );
+};
 
-            <section id="about" className="py-32 bg-slate-50">
-              <About />
-            </section>
+// --- Wrappers to use hooks ---
 
-            <section id="contact" className="py-32 bg-slate-900 text-white">
-              <Contact />
-            </section>
-          </main>
-        );
-    }
-  };
-
+const NavbarWrapper = ({ isScrolled, onSearchToggle }: { isScrolled: boolean, onSearchToggle: () => void }) => {
+  const navigate = useNavigate();
   return (
-    <div className="relative min-h-screen">
-      <Navbar 
-        isScrolled={isScrolled} 
-        onNavigate={handleNavigate} 
-        onSearchToggle={() => setIsSearchOpen(true)}
-      />
-      
-      {renderContent()}
+    <Navbar 
+      isScrolled={isScrolled} 
+      onNavigate={(view) => {
+        if (view === 'home') navigate('/');
+        else if (view === 'news-list') navigate('/news');
+        else if (view === 'services-list') navigate('/services');
+        else if (view === 'portfolio-list') navigate('/portfolio');
+        else if (view === 'about-page') navigate('/about');
+        else if (view === 'contact-page') navigate('/contact');
+        else if (view === 'sitemap') navigate('/sitemap');
+        else if (view === 'privacy-policy') navigate('/privacy-policy');
+        else if (view === 'terms-of-service') navigate('/terms-of-service');
+        else if (view === 'cookie-policy') navigate('/cookie-policy');
+        else if (view === 'specified-commercial-transactions') navigate('/specified-commercial-transactions');
+        else navigate(`/${view}`);
+      }} 
+      onSearchToggle={onSearchToggle}
+    />
+  );
+};
 
-      <Footer onNavigate={handleNavigate} />
-      
-      <CookieBanner onNavigate={handleNavigate} />
+const FooterWrapper = () => {
+  const navigate = useNavigate();
+  return (
+    <Footer onNavigate={(view) => {
+      if (view === 'home') navigate('/');
+      else if (view === 'news-list') navigate('/news');
+      else if (view === 'services-list') navigate('/services');
+      else if (view === 'portfolio-list') navigate('/portfolio');
+      else if (view === 'about-page') navigate('/about');
+      else if (view === 'contact-page') navigate('/contact');
+      else if (view === 'sitemap') navigate('/sitemap');
+      else if (view === 'privacy-policy') navigate('/privacy-policy');
+      else if (view === 'terms-of-service') navigate('/terms-of-service');
+      else if (view === 'cookie-policy') navigate('/cookie-policy');
+      else if (view === 'specified-commercial-transactions') navigate('/specified-commercial-transactions');
+      else navigate(`/${view}`);
+    }} />
+  );
+};
 
-      {isSearchOpen && (
-        <SearchModal 
-          onClose={() => setIsSearchOpen(false)} 
-          onNavigate={(view, id) => {
-            setIsSearchOpen(false);
-            handleNavigate(view === 'detail' ? 'service-detail' : view, id);
-          }}
-        />
-      )}
-    </div>
+const CookieBannerWrapper = () => {
+  const navigate = useNavigate();
+  return (
+    <CookieBanner onNavigate={(view) => {
+      if (view === 'home') navigate('/');
+      else if (view === 'privacy-policy') navigate('/privacy-policy');
+      else if (view === 'cookie-policy') navigate('/cookie-policy');
+      else navigate(`/${view}`);
+    }} />
+  );
+};
+
+const SearchModalWrapper = ({ onClose }: { onClose: () => void }) => {
+  const navigate = useNavigate();
+  return (
+    <SearchModal 
+      onClose={onClose} 
+      onNavigate={(view, id) => {
+        onClose();
+        if (view === 'detail' || view === 'service-detail') navigate(`/services/${id}`);
+        else if (view === 'news-detail') navigate(`/news/${id}`);
+        else if (view === 'home') navigate('/');
+        else if (view === 'news-list') navigate('/news');
+        else if (view === 'services-list') navigate('/services');
+        else if (view === 'portfolio-list') navigate('/portfolio');
+        else if (view === 'about-page') navigate('/about');
+        else if (view === 'contact-page') navigate('/contact');
+        else if (view === 'sitemap') navigate('/sitemap');
+        else if (view === 'privacy-policy') navigate('/privacy-policy');
+        else if (view === 'terms-of-service') navigate('/terms-of-service');
+        else if (view === 'cookie-policy') navigate('/cookie-policy');
+        else if (view === 'specified-commercial-transactions') navigate('/specified-commercial-transactions');
+        else navigate(`/${view}`);
+      }}
+    />
   );
 };
 

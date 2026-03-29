@@ -6,7 +6,7 @@ export const Hero: React.FC = () => {
   const { hero } = siteContent;
   
   return (
-    <div className="relative h-[60vh] md:h-[70vh] flex items-center overflow-hidden bg-slate-50">
+    <div className="relative h-[70vh] md:h-[85vh] flex items-center overflow-hidden bg-slate-50 pt-20 md:pt-32">
       <div className="absolute inset-0 z-0">
         <img 
           src={hero.image} 
