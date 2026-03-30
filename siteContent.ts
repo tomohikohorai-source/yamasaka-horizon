@@ -26,6 +26,15 @@ export const siteContent = {
 
   news: [
     {
+      id: 'news-017',
+      date: '2026.03.21',
+      category: 'INFO',
+      title: '大阪よどがわ市民生活協同組合とマーケティングおよびブランディングに関する業務委託契約を締結しました',
+      type: 'Announcement',
+      image: `${GOOGLE_DRIVE_BASE}1lQu3LVmGdCVgqgFI5meOgfsCfOEDP_EZ`,
+      content: '2026年3月21日付で、大阪よどがわ市民生活協同組合とマーケティングおよびブランディングに関する業務委託契約を締結いたしました。\n\n当社は、マーケティングおよびブランディング戦略の立案や実行、組合員データの分析やITインフラの設計・構築を通じて、組合員の獲得や継続率向上を目指します。'
+    },
+    {
       id: 'news-016',
       date: '2026.03.19',
       category: 'EVENT',

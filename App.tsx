@@ -119,10 +119,10 @@ const NewsDetailPage = () => {
         </div>
       </div>
 
-      <div className="bg-slate-100 rounded-3xl mb-12 overflow-hidden shadow-2xl flex items-center justify-center min-h-[350px] md:min-h-[550px]">
+      <div className="bg-slate-100 rounded-3xl mb-12 overflow-hidden shadow-2xl p-4 md:p-8">
         <img 
           src={news.image} 
-          className="max-w-full max-h-[85vh] w-auto h-auto object-contain" 
+          className="w-full h-auto block rounded-xl md:rounded-2xl" 
           alt={news.title}
           onError={(e) => {
             (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&q=80&w=1200";
