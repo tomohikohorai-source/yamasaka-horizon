@@ -26,6 +26,15 @@ export const siteContent = {
 
   news: [
     {
+      id: 'news-018',
+      date: '2026.04.01',
+      category: 'INFO',
+      title: 'スポーツナビ株式会社と業務委託契約を締結しました',
+      type: 'Announcement',
+      image: `${GOOGLE_DRIVE_BASE}1O8BNJbNsnEZDXxDbATLE4J_HKLMh1mN4`,
+      content: '2026年4月1日付で、スポーツナビ株式会社と業務委託契約を締結いたしました。\n当社は、スポーツ団体の記事や動画といったコンテンツを、スポーツナビ上で配信できるオウンドツールの導入および運用のサポートを通じて、スポーツナビのコンテンツ拡充、ならびにスポーツ団体のプロモーションを支援します。'
+    },
+    {
       id: 'news-017',
       date: '2026.03.21',
       category: 'INFO',
