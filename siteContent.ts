@@ -26,6 +26,15 @@ export const siteContent = {
 
   news: [
     {
+      id: 'news-019',
+      date: '2026.04.15',
+      category: 'INFO',
+      title: 'Athletes Peak Academy（APA）と代理店契約を締結しました',
+      type: 'Announcement',
+      image: `${GOOGLE_DRIVE_BASE}1RMUa5iryNUwgb-e9woFkukHGaRLFdaGP`,
+      content: '2026年4月14日付で、Athletes Peak Academy（以下「APA」）と、同アカデミーが主催する「Summer Camp 2026 Programme」の代理店契約を締結いたしました。\n\n当社は、これまでスポーツ業界やマーケティング支援で培った知見を活かし、本プログラムのプロモーションおよび集客支援を行います。次世代のアスリート育成を目指すAPAの価値を広く伝え、参加者にとって最適な体験価値の創出に寄与してまいります。'
+    },
+    {
       id: 'news-018',
       date: '2026.04.01',
       category: 'INFO',
