@@ -26,6 +26,15 @@ export const siteContent = {
 
   news: [
     {
+      id: 'news-020',
+      date: '2026.05.29',
+      category: 'INFO',
+      title: '摂南大学にて日本製鉄堺ブレイザーズと連携した特別講義を行いました',
+      type: 'Announcement',
+      image: `${GOOGLE_DRIVE_BASE}194Dd-wkvLCqFj5qBgsPxcJzOE-Ybgto4`,
+      content: '2026年5月12日（火）に代表取締役社長の洞井が、摂南大学 経済学部・郭ゼミでのSVリーグ所属プロバレーボールチーム「日本製鉄堺ブレイザーズ」との教育連携プログラムにおいて、「スポーツビジネスの概要」の特別講義を行いました。\n\n今後、学生たちによる日本製鉄堺ブレイザーズの試合観戦や会場での来場者アンケート調査などを通じて、顧客の行動やニーズを把握・分析し、具体的な提案を行っていく予定です。'
+    },
+    {
       id: 'news-019',
       date: '2026.04.15',
       category: 'INFO',
