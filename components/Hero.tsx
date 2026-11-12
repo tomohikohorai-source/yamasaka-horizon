@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { siteContent } from '../siteContent';
 import { HeroNetwork } from './HeroNetwork';
 
@@ -54,16 +55,19 @@ export const Hero: React.FC = () => {
           <div className="yh-hero-in flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6" style={delay('1.35s')}>
             <a
               href="#services"
-              className="yh-shine px-10 py-4 bg-slate-900 text-white text-xs font-bold tracking-[0.2em] hover:bg-blue-600 transition-all text-center rounded-sm shadow-xl shadow-slate-900/10"
+              className="yh-shine px-10 py-4 bg-slate-900 text-white text-xs font-bold tracking-[0.2em] hover:bg-blue-600 transition-all text-center rounded-full shadow-xl shadow-slate-900/10"
             >
               SERVICES
             </a>
-            <a
-              href="#contact"
-              className="px-10 py-4 border border-slate-200 text-slate-900 text-xs font-bold tracking-[0.2em] hover:border-slate-900 transition-all text-center rounded-sm"
+            <Link
+              to="/contact"
+              className="group inline-flex items-center justify-center px-4 py-4 text-slate-900 text-xs font-bold tracking-[0.2em] hover:text-blue-600 transition-colors"
             >
               CONTACT
-            </a>
+              <svg className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </Link>
           </div>
         </div>
       </div>

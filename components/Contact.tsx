@@ -220,7 +220,7 @@ export const Contact: React.FC = () => {
           <button 
             type="submit"
             disabled={status === 'submitting'}
-            className="yh-shine w-full py-4 bg-blue-600 text-white text-xs font-bold tracking-[0.3em] hover:bg-blue-500 transition-all rounded-lg flex justify-center items-center space-x-2 disabled:bg-slate-700 shadow-xl shadow-blue-600/20"
+            className="yh-shine w-full py-4 bg-blue-600 text-white text-xs font-bold tracking-[0.3em] hover:bg-blue-500 transition-all rounded-full flex justify-center items-center space-x-2 disabled:bg-slate-700 shadow-xl shadow-blue-600/20"
           >
             {status === 'submitting' ? (
               <>

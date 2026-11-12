@@ -11,6 +11,8 @@ import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
 import { CookieBanner } from './components/CookieBanner';
 import { ContactCta } from './components/ContactCta';
+import { ContactBand } from './components/ContactBand';
+import { BackToTop } from './components/BackToTop';
 import { preloadImage } from './lib/preload';
 import { getPageMeta, applyPageMeta } from './lib/pageMeta';
 import { SearchModal } from './components/SearchModal';
@@ -47,36 +49,58 @@ const renderTextWithLinks = (text: string) => {
 
 // --- Layout Components ---
 
-/**
- * 「BACK」ボタン用：サイト内で前のページがあればそこへ戻り、
- * 検索や共有リンクから直接来た場合（前のページがない場合）は fallback のページへ移動する。
- * （以前は常に「ブラウザの戻る」だったため、直接来た人はサイトの外へ出てしまっていた）
- */
-const useBack = (fallback: string) => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  return () => (location.key !== 'default' ? navigate(-1) : navigate(fallback));
-};
+/** パンくずリスト（HOME / NEWS / 記事名 のように、今いる場所を示す） */
+const Breadcrumbs: React.FC<{ items: { label: string; to?: string }[]; className?: string }> = ({ items, className = 'mb-8' }) => (
+  <nav aria-label="パンくずリスト" className={className}>
+    <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] font-bold tracking-[0.2em] uppercase text-slate-400">
+      {items.map((item, i) => (
+        <li key={i} className="flex items-center gap-2 min-w-0">
+          {i > 0 && <span aria-hidden="true" className="text-slate-300">/</span>}
+          {item.to ? (
+            <Link to={item.to} className="hover:text-blue-600 transition-colors">{item.label}</Link>
+          ) : (
+            <span aria-current="page" className="text-blue-600 truncate max-w-[14rem] md:max-w-md">{item.label}</span>
+          )}
+        </li>
+      ))}
+    </ol>
+  </nav>
+);
 
-const PageLayout: React.FC<{ title: string, subtitle: string, backTo?: string, children?: React.ReactNode }> = ({ children, title, subtitle, backTo = '/' }) => {
-  const goBack = useBack(backTo);
-  return (
-  <div className="pt-32 pb-20 px-6 max-w-7xl mx-auto min-h-screen animate-in fade-in duration-700">
-    <div className="max-w-4xl mx-auto">
-      <button onClick={goBack} className="text-blue-600 font-bold text-xs tracking-widest mb-12 flex items-center group">
-        <svg className="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-        BACK
-      </button>
-      <div className="mb-16">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tighter">{title}</h1>
-        <p className="text-slate-400 font-light tracking-wide">{subtitle}</p>
-        <div className="h-1 w-12 bg-blue-500 mt-6"></div>
+/** 下層ページの見出し帯（パンくず＋大きな見出し） */
+const PageHeader: React.FC<{ title: string, subtitle: string }> = ({ title, subtitle }) => (
+  <header className="relative overflow-hidden bg-white border-b border-slate-100 px-6 pt-32 pb-14 md:pt-40 md:pb-20">
+    <div aria-hidden="true" className="pointer-events-none absolute -top-32 -right-24 w-[26rem] h-[26rem] rounded-full bg-gradient-to-br from-blue-100/70 to-pink-100/60 blur-3xl"></div>
+    <div className="relative max-w-4xl mx-auto">
+      <Breadcrumbs items={[{ label: 'HOME', to: '/' }, { label: title }]} />
+      <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-slate-900">{title}</h1>
+      <p className="mt-4 text-slate-400 font-light tracking-wide">{subtitle}</p>
+      <div className="h-1 w-12 mt-8 rounded-full bg-gradient-to-r from-blue-600 to-pink-500"></div>
+    </div>
+  </header>
+);
+
+const PageLayout: React.FC<{ title: string, subtitle: string, children?: React.ReactNode }> = ({ children, title, subtitle }) => (
+  <div className="min-h-screen animate-in fade-in duration-700">
+    <PageHeader title={title} subtitle={subtitle} />
+    <div className="px-6 py-16 md:py-20">
+      <div className="max-w-4xl mx-auto">
+        {children}
       </div>
-      {children}
     </div>
   </div>
-  );
-};
+);
+
+/** お問い合わせページ：フォームはトップにあった時と同じ濃紺の背景で表示する */
+const ContactPage = () => (
+  <div className="min-h-screen animate-in fade-in duration-700">
+    <PageHeader title="Contact" subtitle="プロジェクトのご相談はこちらから" />
+    <section className="relative overflow-hidden py-24 md:py-32 bg-slate-900 text-white">
+      <div className="yh-glow" data-active aria-hidden="true"></div>
+      <Contact />
+    </section>
+  </div>
+);
 
 // --- Page Components ---
 
@@ -147,10 +171,7 @@ const NewsDetailPage = () => {
   return (
     <div className="pt-32 pb-20 px-6 max-w-5xl mx-auto min-h-screen animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="max-w-4xl mx-auto">
-        <Link to="/news" className="text-blue-600 font-bold text-xs tracking-widest mb-12 flex w-fit items-center group">
-          <svg className="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-          BACK TO NEWS
-        </Link>
+        <Breadcrumbs className="mb-10" items={[{ label: 'HOME', to: '/' }, { label: 'NEWS', to: '/news' }, { label: news.title }]} />
         
         <div className="mb-12">
           <div className="flex items-center space-x-4 mb-6">
@@ -214,18 +235,12 @@ const NewsDetailPage = () => {
             ) : <div className="hidden md:block"></div>}
           </div>
 
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+          <div className="flex justify-center">
             <Link 
               to="/news"
-              className="w-full max-w-xs sm:w-auto text-center px-10 py-4 bg-slate-900 text-white text-xs font-bold tracking-[0.2em] hover:bg-blue-600 transition-all rounded-full shadow-xl"
+              className="px-10 py-4 bg-slate-900 text-white text-xs font-bold tracking-[0.2em] hover:bg-blue-600 transition-all rounded-full shadow-xl"
             >
               NEWS LIST / 一覧に戻る
-            </Link>
-            <Link 
-              to="/contact"
-              className="yh-shine w-full max-w-xs sm:w-auto text-center px-10 py-4 bg-blue-600 text-white text-xs font-bold tracking-[0.2em] hover:bg-slate-900 transition-all rounded-full shadow-xl shadow-blue-600/20"
-            >
-              CONTACT / お問い合わせ
             </Link>
           </div>
         </div>
@@ -236,16 +251,12 @@ const NewsDetailPage = () => {
 
 const ServiceDetailPage = () => {
   const { id } = useParams<{ id: string }>();
-  const goBack = useBack('/services');
   const service = siteContent.services.find(s => s.id === id || s.title === id);
   if (!service) return null;
 
   return (
     <div className="pt-32 pb-20 px-6 max-w-5xl mx-auto min-h-screen animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <button onClick={goBack} className="text-blue-600 font-bold text-xs tracking-widest mb-12 flex items-center group">
-        <svg className="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-        BACK
-      </button>
+      <Breadcrumbs className="mb-10" items={[{ label: 'HOME', to: '/' }, { label: 'SERVICES', to: '/services' }, { label: service.title }]} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start mb-20">
         <div>
@@ -279,11 +290,6 @@ const ServiceDetailPage = () => {
         </div>
       </div>
 
-      <div className="mt-20 flex justify-center">
-        <Link to="/contact" className="px-12 py-5 bg-slate-900 text-white text-xs font-bold tracking-[0.3em] hover:bg-blue-600 transition-all rounded-full shadow-2xl">
-          CONTACT US / お問い合わせ
-        </Link>
-      </div>
     </div>
   );
 };
@@ -383,11 +389,6 @@ const HomePage = () => {
       <section id="news" className="py-24 bg-white">
         <News />
       </section>
-
-      <section id="contact" className="relative overflow-hidden py-32 bg-slate-900 text-white">
-        <div className="yh-glow" data-active aria-hidden="true"></div>
-        <Contact />
-      </section>
     </main>
   );
 };
@@ -421,7 +422,7 @@ const App: React.FC = () => {
           <Route path="/services/:id" element={<ServiceDetailPage />} />
           <Route path="/portfolio" element={<PageLayout title="Portfolio" subtitle="これまでの主な実績"><Portfolio /></PageLayout>} />
           <Route path="/about" element={<PageLayout title="About Us" subtitle="熱狂を日常に、ワクワクを未来に。"><About /></PageLayout>} />
-          <Route path="/contact" element={<PageLayout title="Contact" subtitle="プロジェクトのご相談はこちらから"><Contact /></PageLayout>} />
+          <Route path="/contact" element={<ContactPage />} />
           <Route path="/sitemap" element={<SitemapPage />} />
           <Route path="/privacy-policy" element={<LegalPage 
             title="Privacy Policy" 
@@ -570,9 +571,11 @@ support@yamasakahorizon.com
           />} />
         </Routes>
 
+        <ContactBand />
         <Footer />
         
         <ContactCta />
+        <BackToTop />
         <CookieBannerWrapper />
 
         {isSearchOpen && (

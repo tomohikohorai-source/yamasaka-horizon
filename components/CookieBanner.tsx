@@ -76,13 +76,13 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ onNavigate }) => {
           <div className="flex space-x-3">
             <button 
               onClick={handleAccept}
-              className="px-6 py-2 bg-slate-900 text-white text-[10px] font-bold tracking-widest rounded-lg hover:bg-blue-600 transition-colors"
+              className="px-6 py-2 bg-slate-900 text-white text-[10px] font-bold tracking-widest rounded-full hover:bg-blue-600 transition-colors"
             >
               同意する
             </button>
             <button 
               onClick={handleDecline}
-              className="px-6 py-2 border border-slate-200 text-slate-500 text-[10px] font-bold tracking-widest rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-colors"
+              className="px-6 py-2 border border-slate-200 text-slate-500 text-[10px] font-bold tracking-widest rounded-full hover:bg-slate-50 hover:border-slate-300 transition-colors"
             >
               拒否する
             </button>
