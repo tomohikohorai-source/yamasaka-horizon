@@ -22,14 +22,14 @@ export const Hero: React.FC = () => {
   const line1Len = Array.from(hero.titleLine1).length;
 
   return (
-    <div className="relative h-[70vh] md:h-[85vh] flex items-center overflow-hidden bg-slate-50 pt-20 md:pt-32" data-active>
+    <div className="relative flex items-center overflow-hidden bg-slate-50 pt-28 pb-10 md:pt-28 md:pb-8 md:h-[70vh] md:min-h-[560px] md:max-h-[700px]" data-active>
       <div className="absolute inset-0 z-0">
         <img
           src={hero.image}
           alt="Hero Background"
           className="yh-hero-bg w-full h-full object-cover opacity-30"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-white via-white/40 to-slate-50"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-white via-white/40 to-white"></div>
       </div>
 
       <HeroNetwork />

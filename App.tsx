@@ -373,7 +373,11 @@ const HomePage = () => {
         <Hero />
       </section>
       
-      {/* 並び順：初めて来た人が「何をしている会社か」を先に分かるよう、事業 → 実績 → 会社 → ニュースの順 */}
+      {/* ヒーローを少し低くし、最初の画面でニュースのカードが見え始めるようにしている */}
+      <section id="news" className="pt-6 pb-24 md:pt-8 bg-white">
+        <News />
+      </section>
+
       <section id="services" className="py-32 bg-slate-50">
         <Services />
       </section>
@@ -384,10 +388,6 @@ const HomePage = () => {
 
       <section id="about" className="py-32 bg-slate-50">
         <About />
-      </section>
-
-      <section id="news" className="py-24 bg-white">
-        <News />
       </section>
     </main>
   );

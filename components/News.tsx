@@ -22,7 +22,7 @@ export const News: React.FC = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-6 md:px-12">
-      <div className="flex justify-between items-end mb-12">
+      <div className="flex justify-between items-end mb-8 md:mb-10">
         <div>
           <h2 data-reveal className="text-2xl font-bold tracking-tighter text-slate-900 uppercase">News</h2>
           <p data-reveal className="text-[10px] text-blue-500 font-bold tracking-widest mt-1 uppercase">Updates</p>
