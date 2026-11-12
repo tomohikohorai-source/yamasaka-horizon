@@ -27,9 +27,16 @@ export const Hero: React.FC = () => {
         <img
           src={hero.image}
           alt="Hero Background"
-          className="yh-hero-bg w-full h-full object-cover opacity-30"
+          className="yh-hero-bg w-full h-full object-cover opacity-70"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-white via-white/40 to-white"></div>
+        {/* 写真を以前（30%）より濃く見せつつ、文字の読みやすさを保つための白いぼかし */}
+        {/* スマホ：文字が全幅なので上下とも白を強めに */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-white/70 to-white md:hidden"></div>
+        {/* PC：文字のある左側は白く、右側ほど写真が見える */}
+        <div className="absolute inset-0 hidden md:block bg-gradient-to-r from-white via-white/80 to-white/10"></div>
+        {/* 上（メニューの下）と下（ニュースへのつなぎ）を白くなじませる */}
+        <div className="absolute inset-x-0 top-0 h-28 hidden md:block bg-gradient-to-b from-white/90 to-transparent"></div>
+        <div className="absolute inset-x-0 bottom-0 h-40 hidden md:block bg-gradient-to-b from-transparent to-white"></div>
       </div>
 
       <HeroNetwork />

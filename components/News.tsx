@@ -81,12 +81,14 @@ export const News: React.FC = () => {
  * 横長のロゴ画像・正方形に近いロゴやポスター・会社ロゴ（写真のない記事用）は、切れないよう全体を収めて表示する。
  */
 const LOGO_IMAGE_ID = '1ymeWJOGXCIcLXDeK8I3DzgL5DxL-rVJm';
+const LOGO_IMAGE = `https://lh3.googleusercontent.com/d/${LOGO_IMAGE_ID}`;
 const NewsThumb: React.FC<{ src: string; alt: string }> = ({ src, alt }) => {
+  const [current, setCurrent] = useState(src);
   const [fit, setFit] = useState<'cover' | 'contain'>(src.includes(LOGO_IMAGE_ID) ? 'contain' : 'cover');
   const [loaded, setLoaded] = useState(false);
   return (
     <img
-      src={src}
+      src={current}
       alt={alt}
       loading="lazy"
       decoding="async"
@@ -95,7 +97,13 @@ const NewsThumb: React.FC<{ src: string; alt: string }> = ({ src, alt }) => {
         if (h && (w / h > 2.2 || w / h < 1.25)) setFit('contain');
         setLoaded(true);
       }}
-      onError={() => setLoaded(true)}
+      onError={() => {
+        // 写真が読み込めない時は、写真のない記事と同じく会社ロゴを表示する（それも駄目なら空の枠のまま）
+        if (current !== LOGO_IMAGE) {
+          setFit('contain');
+          setCurrent(LOGO_IMAGE);
+        }
+      }}
       className={`w-full h-full transition-[opacity,transform] duration-700 group-hover:scale-105 ${
         fit === 'contain' ? 'object-contain p-8 bg-white' : 'object-cover'
       } ${loaded ? 'opacity-100' : 'opacity-0'}`}
