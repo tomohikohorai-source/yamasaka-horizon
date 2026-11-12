@@ -47,7 +47,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isScrolled, onSearchToggle }) =>
       isScrolled ? 'glass-morphism py-4 shadow-sm' : 'bg-transparent py-6'
     }`}>
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
-        <Link to="/" className="flex items-center space-x-2 cursor-pointer">
+        <Link to="/" className="flex items-center space-x-2 cursor-pointer whitespace-nowrap">
           <span className={`text-xl md:text-2xl font-bold tracking-tighter transition-colors ${
             isScrolled ? 'text-slate-900' : 'text-slate-800'
           }`}>
@@ -56,8 +56,8 @@ export const Navbar: React.FC<NavbarProps> = ({ isScrolled, onSearchToggle }) =>
         </Link>
 
         {/* Desktop Nav */}
-        <div className="hidden md:flex items-center space-x-8 lg:space-x-10">
-          {navLinks.map((link) => (
+        <div className="hidden lg:flex items-center space-x-7 xl:space-x-10">
+          {navLinks.filter((link) => link.to !== '/contact').map((link) => (
             <Link
               key={link.name}
               to={link.to}
@@ -79,10 +79,21 @@ export const Navbar: React.FC<NavbarProps> = ({ isScrolled, onSearchToggle }) =>
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </button>
+
+          {/* 相談の入口：メニュー右端に常に見えるボタン */}
+          <Link
+            to="/contact"
+            aria-current={isCurrent('/contact') ? 'page' : undefined}
+            className={`yh-shine px-6 py-2.5 rounded-full text-white text-[10px] lg:text-xs font-bold tracking-[0.2em] transition-colors shadow-lg shadow-slate-900/10 ${
+              isCurrent('/contact') ? 'bg-blue-600' : 'bg-slate-900 hover:bg-blue-600'
+            }`}
+          >
+            CONTACT
+          </Link>
         </div>
 
         {/* Mobile Toggle */}
-        <div className="flex items-center space-x-4 md:hidden">
+        <div className="flex items-center space-x-4 lg:hidden">
           <button
             onClick={onSearchToggle}
             className="p-2 text-slate-600"
@@ -108,13 +119,13 @@ export const Navbar: React.FC<NavbarProps> = ({ isScrolled, onSearchToggle }) =>
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div id="yh-mobile-menu" className="yh-drop md:hidden absolute top-full left-0 w-full bg-white border-t border-slate-100 p-6 flex flex-col space-y-4 shadow-xl">
-          {navLinks.map((link) => (
+        <div id="yh-mobile-menu" className="yh-drop lg:hidden absolute top-full left-0 w-full bg-white border-t border-slate-100 p-6 flex flex-col space-y-4 shadow-xl">
+          {navLinks.filter((link) => link.to !== '/contact').map((link) => (
             <Link
               key={link.name}
               to={link.to}
               aria-current={isCurrent(link.to) ? 'page' : undefined}
-              className={`text-sm font-medium tracking-widest py-2 border-b border-slate-50 last:border-none ${
+              className={`text-sm font-medium tracking-widest py-2 border-b border-slate-50 ${
                 isCurrent(link.to) ? 'text-blue-600' : 'text-slate-900'
               }`}
               onClick={() => setIsOpen(false)}
@@ -122,6 +133,13 @@ export const Navbar: React.FC<NavbarProps> = ({ isScrolled, onSearchToggle }) =>
               {link.name}
             </Link>
           ))}
+          <Link
+            to="/contact"
+            onClick={() => setIsOpen(false)}
+            className="yh-shine mt-2 text-center py-4 rounded-full bg-slate-900 text-white text-xs font-bold tracking-[0.2em]"
+          >
+            CONTACT / お問い合わせ
+          </Link>
         </div>
       )}
     </nav>

@@ -10,6 +10,7 @@ import { About } from './components/About';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
 import { CookieBanner } from './components/CookieBanner';
+import { ContactCta } from './components/ContactCta';
 import { preloadImage } from './lib/preload';
 import { getPageMeta, applyPageMeta } from './lib/pageMeta';
 import { SearchModal } from './components/SearchModal';
@@ -366,10 +367,7 @@ const HomePage = () => {
         <Hero />
       </section>
       
-      <section id="news" className="pt-8 pb-24 bg-white">
-        <News />
-      </section>
-
+      {/* 並び順：初めて来た人が「何をしている会社か」を先に分かるよう、事業 → 実績 → 会社 → ニュースの順 */}
       <section id="services" className="py-32 bg-slate-50">
         <Services />
       </section>
@@ -380,6 +378,10 @@ const HomePage = () => {
 
       <section id="about" className="py-32 bg-slate-50">
         <About />
+      </section>
+
+      <section id="news" className="py-24 bg-white">
+        <News />
       </section>
 
       <section id="contact" className="relative overflow-hidden py-32 bg-slate-900 text-white">
@@ -570,6 +572,7 @@ support@yamasakahorizon.com
 
         <Footer />
         
+        <ContactCta />
         <CookieBannerWrapper />
 
         {isSearchOpen && (

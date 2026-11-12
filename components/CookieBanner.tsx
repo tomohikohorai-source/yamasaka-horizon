@@ -22,6 +22,11 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ onNavigate }) => {
     }
   }, []);
 
+  // バナー表示中は、スマホ下部のお問い合わせボタンを隠す（重なり防止。index.css 参照）
+  useEffect(() => {
+    document.documentElement.toggleAttribute('data-cookie-banner', isVisible);
+  }, [isVisible]);
+
   const handleAccept = () => {
     localStorage.setItem('cookie-consent', 'accepted');
     setIsVisible(false);

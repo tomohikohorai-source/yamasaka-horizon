@@ -28,7 +28,7 @@ export const News: React.FC = () => {
           <p data-reveal className="text-[10px] text-blue-500 font-bold tracking-widest mt-1 uppercase">Updates</p>
           <div data-reveal="bar" className="h-1 w-8 bg-blue-500 mt-4"></div>
         </div>
-        <div className="flex-grow">
+        <div className="flex-grow min-w-0">
           <div className="space-y-4 mb-8">
             {displayNews.map((item, index) => {
               const isNew = isWithinLastMonth(item.date);
@@ -50,7 +50,7 @@ export const News: React.FC = () => {
                       <span className="bg-pink-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full animate-pulse">NEW</span>
                     )}
                   </div>
-                  <span className="text-sm text-slate-700 group-hover:text-blue-600 transition-colors flex-1 truncate">
+                  <span className="text-sm text-slate-700 group-hover:text-blue-600 transition-colors flex-1 min-w-0 truncate">
                     {item.title}
                   </span>
                 </Link>

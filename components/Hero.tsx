@@ -28,7 +28,7 @@ export const Hero: React.FC = () => {
           alt="Hero Background"
           className="yh-hero-bg w-full h-full object-cover opacity-30"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-white via-white/40 to-white"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-white via-white/40 to-slate-50"></div>
       </div>
 
       <HeroNetwork />
