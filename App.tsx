@@ -153,8 +153,33 @@ const NewsListPage = () => {
   );
 };
 
+/** PC 用：画面の左右に出る「前の記事／次の記事」の矢印（マウスを乗せると記事名が出る） */
+const ArticleSideArrow: React.FC<{ to: string; title: string; image: string; dir: 'prev' | 'next' }> = ({ to, title, image, dir }) => (
+  <Link
+    to={to}
+    onPointerEnter={() => preloadImage(image)}
+    aria-label={`${dir === 'prev' ? '前の記事' : '次の記事'}：${title}`}
+    className={`group hidden xl:flex fixed top-1/2 -translate-y-1/2 z-30 items-center h-14 rounded-full bg-white/90 backdrop-blur border border-slate-200 shadow-lg text-slate-700 hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-colors duration-300 ${
+      dir === 'prev' ? 'left-6' : 'right-6 flex-row-reverse'
+    }`}
+  >
+    <span className="w-14 h-14 flex items-center justify-center shrink-0">
+      <svg className="w-5 h-5 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={dir === 'prev' ? 'M15 19l-7-7 7-7' : 'M9 5l7 7-7 7'} />
+      </svg>
+    </span>
+    <span className="max-w-0 group-hover:max-w-[18rem] overflow-hidden transition-[max-width] duration-500 ease-out">
+      <span className={`block w-[16rem] ${dir === 'prev' ? 'pr-6 text-left' : 'pl-6 text-right'}`}>
+        <span className="block text-[9px] font-bold tracking-[0.3em] opacity-60">{dir === 'prev' ? 'PREVIOUS' : 'NEXT'}</span>
+        <span className="block text-xs font-bold truncate">{title}</span>
+      </span>
+    </span>
+  </Link>
+);
+
 const NewsDetailPage = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const currentIndex = siteContent.news.findIndex(n => n.id === id);
   const news = siteContent.news[currentIndex];
   const prevArticle = news ? siteContent.news[currentIndex + 1] : undefined;
@@ -166,14 +191,31 @@ const NewsDetailPage = () => {
     preloadImage(nextArticle?.image);
   }, [prevArticle, nextArticle]);
 
+  // キーボードの ← → でも前後の記事へ（入力欄で文字を打っている時は反応しない）
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+      const el = document.activeElement as HTMLElement | null;
+      if (el && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName))) return;
+      if (e.key === 'ArrowLeft' && prevArticle) navigate(`/news/${prevArticle.id}`);
+      if (e.key === 'ArrowRight' && nextArticle) navigate(`/news/${nextArticle.id}`);
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [prevArticle, nextArticle, navigate]);
+
   if (!news) return null;
 
   return (
-    <div className="pt-32 pb-20 px-6 max-w-5xl mx-auto min-h-screen animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <>
+    {/* 矢印は表示時のアニメーション（位置が動く要素）の外に置く。中に置くと動いている間は位置がずれるため */}
+    {prevArticle && <ArticleSideArrow dir="prev" to={`/news/${prevArticle.id}`} title={prevArticle.title} image={prevArticle.image} />}
+    {nextArticle && <ArticleSideArrow dir="next" to={`/news/${nextArticle.id}`} title={nextArticle.title} image={nextArticle.image} />}
+    <div className="pt-28 pb-20 px-6 max-w-5xl mx-auto min-h-screen animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="max-w-4xl mx-auto">
-        <Breadcrumbs className="mb-10" items={[{ label: 'HOME', to: '/' }, { label: 'NEWS', to: '/news' }, { label: news.title }]} />
+        <Breadcrumbs className="mb-8" items={[{ label: 'HOME', to: '/' }, { label: 'NEWS', to: '/news' }, { label: news.title }]} />
         
-        <div className="mb-12">
+        <div className="mb-8">
           <div className="flex items-center space-x-4 mb-6">
             <span className="text-sm font-mono text-slate-400">{news.date}</span>
             <span className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100 uppercase">{news.type}</span>
@@ -181,20 +223,24 @@ const NewsDetailPage = () => {
               <span className="bg-pink-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full animate-pulse">NEW</span>
             )}
           </div>
-          <h1 className="text-3xl md:text-5xl font-bold mb-8 tracking-tighter text-slate-900 leading-tight">{news.title}</h1>
+          <h1 className="text-3xl md:text-5xl font-bold mb-6 tracking-tighter text-slate-900 leading-tight">{news.title}</h1>
         </div>
       </div>
 
-      <div className="bg-slate-100 rounded-3xl mb-12 overflow-hidden shadow-2xl p-4 md:p-8">
+      {/* 写真は高さに上限を付け（画面の4割強・最大440px）、枠も写真の大きさに合わせて、本文がすぐ目に入るようにする */}
+      <div className="flex justify-center mb-10">
+        <div className="max-w-full bg-slate-100 rounded-3xl overflow-hidden shadow-2xl p-3 md:p-5">
         <img
           key={news.id}
           src={news.image}
-          className="w-full h-auto block rounded-xl md:rounded-2xl" 
+          className="block max-w-full w-auto h-auto object-contain rounded-xl md:rounded-2xl"
+          style={{ maxHeight: 'min(42vh, 440px)' }}
           alt={news.title}
           onError={(e) => {
             (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&q=80&w=1200";
           }}
         />
+        </div>
       </div>
 
       <div className="max-w-4xl mx-auto">
@@ -246,6 +292,7 @@ const NewsDetailPage = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
