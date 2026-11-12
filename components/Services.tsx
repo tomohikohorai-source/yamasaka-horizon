@@ -10,8 +10,8 @@ export const Services: React.FC<ServicesProps> = ({ onSelect }) => {
   return (
     <div className="max-w-7xl mx-auto px-6 md:px-12">
       <div className="text-center mb-16">
-        <span className="text-xs tracking-[0.4em] font-bold text-slate-400 uppercase">Services</span>
-        <h2 className="text-3xl md:text-4xl font-bold mt-4 text-slate-900">私たちの事業</h2>
+        <span data-reveal className="inline-block text-xs tracking-[0.4em] font-bold text-slate-400 uppercase">Services</span>
+        <h2 data-reveal className="text-3xl md:text-4xl font-bold mt-4 text-slate-900">私たちの事業</h2>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
@@ -19,7 +19,9 @@ export const Services: React.FC<ServicesProps> = ({ onSelect }) => {
           <div 
             key={index} 
             onClick={() => onSelect?.(service.id)}
-            className="group bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all border border-slate-100 cursor-pointer flex flex-col h-full"
+            data-reveal
+            data-spotlight
+            className="group bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all border border-slate-100 cursor-pointer flex flex-col h-full"
           >
             <div className="relative h-48 overflow-hidden mb-8 rounded-xl">
               <img 

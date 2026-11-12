@@ -16,7 +16,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
     <footer className="bg-slate-950 text-white py-20 border-t border-slate-900">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="flex flex-col md:flex-row justify-between items-center md:items-start mb-20 space-y-12 md:space-y-0">
-          <div className="text-center md:text-left">
+          <div data-reveal className="text-center md:text-left">
             <div 
               className="text-3xl font-bold tracking-tighter mb-4 cursor-pointer"
               onClick={() => onNavigate('home')}
@@ -28,7 +28,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-20 text-center md:text-left">
+          <div data-reveal className="grid grid-cols-2 gap-20 text-center md:text-left">
             <div>
               <h5 className="text-[10px] tracking-[0.3em] font-bold text-slate-300 uppercase mb-6">Menu</h5>
               <ul className="space-y-4 text-slate-500 text-sm">
@@ -52,7 +52,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           </div>
         </div>
 
-        <div className="pt-12 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 text-slate-600 text-[10px] tracking-widest font-medium">
+        <div data-reveal="fade" className="pt-12 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 text-slate-600 text-[10px] tracking-widest font-medium">
           <div>© 2023 {siteContent.brand.name} {siteContent.brand.nameAccent} Co., Ltd. ALL RIGHTS RESERVED.</div>
           <div className="flex space-x-8">
             <span className="cursor-pointer hover:text-white transition-colors" onClick={() => onNavigate('sitemap')}>SITEMAP</span>

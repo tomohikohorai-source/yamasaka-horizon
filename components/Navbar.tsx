@@ -30,7 +30,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isScrolled, onNavigate, onSearch
   };
 
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-300 ${
+    <nav className={`yh-nav-in fixed w-full z-50 transition-all duration-300 ${
       isScrolled ? 'glass-morphism py-4 shadow-sm' : 'bg-transparent py-6'
     }`}>
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
@@ -49,7 +49,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isScrolled, onNavigate, onSearch
               key={link.name}
               href={link.href}
               onClick={(e) => handleLinkClick(e, link.view)}
-              className={`text-[10px] lg:text-xs font-bold tracking-[0.2em] transition-colors hover:text-blue-600 ${
+              className={`yh-navlink text-[10px] lg:text-xs font-bold tracking-[0.2em] transition-colors hover:text-blue-600 ${
                 isScrolled ? 'text-slate-700' : 'text-slate-700'
               }`}
             >
@@ -92,7 +92,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isScrolled, onNavigate, onSearch
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden absolute top-full left-0 w-full bg-white border-t border-slate-100 p-6 flex flex-col space-y-4 shadow-xl">
+        <div className="yh-drop md:hidden absolute top-full left-0 w-full bg-white border-t border-slate-100 p-6 flex flex-col space-y-4 shadow-xl">
           {navLinks.map((link) => (
             <a
               key={link.name}

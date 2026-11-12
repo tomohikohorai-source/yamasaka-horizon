@@ -26,9 +26,9 @@ export const News: React.FC<NewsProps> = ({ onViewAll, onSelect }) => {
     <div className="max-w-7xl mx-auto px-6 md:px-12">
       <div className="flex flex-col md:flex-row md:items-start gap-8 md:gap-20">
         <div className="flex-shrink-0">
-          <h2 className="text-2xl font-bold tracking-tighter text-slate-900 uppercase">News</h2>
-          <p className="text-[10px] text-blue-500 font-bold tracking-widest mt-1 uppercase">Updates</p>
-          <div className="h-1 w-8 bg-blue-500 mt-4"></div>
+          <h2 data-reveal className="text-2xl font-bold tracking-tighter text-slate-900 uppercase">News</h2>
+          <p data-reveal className="text-[10px] text-blue-500 font-bold tracking-widest mt-1 uppercase">Updates</p>
+          <div data-reveal="bar" className="h-1 w-8 bg-blue-500 mt-4"></div>
         </div>
         <div className="flex-grow">
           <div className="space-y-4 mb-8">
@@ -38,7 +38,8 @@ export const News: React.FC<NewsProps> = ({ onViewAll, onSelect }) => {
                 <div 
                   key={index} 
                   onClick={() => onSelect?.(item.id)}
-                  className="group flex flex-col sm:flex-row sm:items-center border-b border-slate-100 pb-4 hover:border-blue-200 transition-colors cursor-pointer relative"
+                  data-reveal
+                  className="yh-row group flex flex-col sm:flex-row sm:items-center border-b border-slate-100 pb-4 hover:border-blue-200 transition-colors cursor-pointer relative"
                 >
                   <span className="text-xs font-mono text-slate-400 w-32">{item.date}</span>
                   <div className="flex items-center space-x-3 sm:mr-6">
@@ -56,7 +57,7 @@ export const News: React.FC<NewsProps> = ({ onViewAll, onSelect }) => {
               );
             })}
           </div>
-          <div className="flex justify-end">
+          <div data-reveal className="flex justify-end">
             <button 
               onClick={onViewAll}
               className="inline-flex items-center text-xs font-bold tracking-widest text-slate-400 hover:text-blue-600 transition-colors group"

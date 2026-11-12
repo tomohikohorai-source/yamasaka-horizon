@@ -71,7 +71,7 @@ const NewsListPage = () => {
         {siteContent.news.map((item, i) => {
           const isNew = isWithinLastMonth(item.date);
           return (
-            <div key={i} onClick={() => navigate(`/news/${item.id}`)} className="group border-b border-slate-100 pb-8 hover:bg-slate-50/50 transition-colors p-6 rounded-2xl cursor-pointer relative">
+            <div key={i} data-reveal onClick={() => navigate(`/news/${item.id}`)} className="group border-b border-slate-100 pb-8 hover:bg-slate-50/50 transition-colors p-6 rounded-2xl cursor-pointer relative">
               <div className="flex items-center space-x-4 mb-3">
                 <span className="text-xs font-mono text-slate-400">{item.date}</span>
                 <span className="text-[10px] font-bold text-blue-500 border border-blue-500 px-2 py-0.5 rounded uppercase">{item.category}</span>
@@ -210,10 +210,10 @@ const ServiceDetailPage = () => {
       </div>
 
       <div className="bg-slate-50 rounded-3xl p-10 md:p-16 border border-slate-100">
-        <h3 className="text-2xl font-bold text-slate-900 mb-10 text-center">支援内容の詳細</h3>
+        <h3 data-reveal className="text-2xl font-bold text-slate-900 mb-10 text-center">支援内容の詳細</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {service.features.map((feature, idx) => (
-            <div key={idx} className="flex items-start space-x-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100 transition-transform hover:-translate-y-1">
+            <div key={idx} data-reveal data-spotlight className="flex items-start space-x-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100 transition-transform hover:-translate-y-1">
               <div className="w-8 h-8 bg-blue-50 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                 <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
@@ -325,7 +325,8 @@ const HomePage = () => {
         <About />
       </section>
 
-      <section id="contact" className="py-32 bg-slate-900 text-white">
+      <section id="contact" className="relative overflow-hidden py-32 bg-slate-900 text-white">
+        <div className="yh-glow" data-active aria-hidden="true"></div>
         <Contact />
       </section>
     </main>
@@ -349,6 +350,7 @@ const App: React.FC = () => {
       <ScrollToTop />
       <ScrollToHash />
       <div className="relative min-h-screen">
+        <div className="yh-progress" aria-hidden="true"></div>
         <NavbarWrapper isScrolled={isScrolled} onSearchToggle={() => setIsSearchOpen(true)} />
         
         <Routes>

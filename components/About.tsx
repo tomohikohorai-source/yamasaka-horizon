@@ -8,7 +8,8 @@ export const About: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
       <div className="relative">
-        <div className="aspect-square bg-slate-100 rounded-full overflow-hidden shadow-2xl border-[8px] border-white relative group">
+        <div className="yh-orbit" data-active aria-hidden="true"></div>
+        <div data-reveal="zoom" className="aspect-square bg-slate-100 rounded-full overflow-hidden shadow-2xl border-[8px] border-white relative group">
           <img 
             src={about.image} 
             alt="Vision" 
@@ -20,20 +21,20 @@ export const About: React.FC = () => {
         </div>
       </div>
 
-      <div className="animate-in fade-in slide-in-from-right duration-700">
-        <span className="text-xs tracking-[0.4em] font-bold text-slate-400 uppercase">Vision</span>
-        <h2 className="text-3xl md:text-4xl font-bold mt-4 mb-8 text-slate-900 whitespace-pre-line">{about.title}</h2>
+      <div>
+        <span data-reveal className="inline-block text-xs tracking-[0.4em] font-bold text-slate-400 uppercase">Vision</span>
+        <h2 data-reveal className="text-3xl md:text-4xl font-bold mt-4 mb-8 text-slate-900 whitespace-pre-line">{about.title}</h2>
         <div className="space-y-6 text-slate-600 leading-relaxed mb-10">
-          <p>{about.description1}</p>
-          <p>{about.description2}</p>
+          <p data-reveal>{about.description1}</p>
+          <p data-reveal>{about.description2}</p>
         </div>
 
         {about.companyProfile && (
           <div className="mb-12 pt-8 border-t border-slate-100">
-            <h3 className="text-[10px] tracking-[0.3em] font-bold text-slate-400 uppercase mb-6">Company Profile / 会社概要</h3>
+            <h3 data-reveal className="text-[10px] tracking-[0.3em] font-bold text-slate-400 uppercase mb-6">Company Profile / 会社概要</h3>
             <div className="space-y-4">
               {about.companyProfile.map((item, idx) => (
-                <div key={idx} className="flex flex-col sm:flex-row border-b border-slate-50 pb-3 sm:pb-2 items-start sm:items-baseline">
+                <div key={idx} data-reveal className="flex flex-col sm:flex-row border-b border-slate-50 pb-3 sm:pb-2 items-start sm:items-baseline">
                   <span className="text-[11px] font-bold text-slate-400 w-full sm:w-32 shrink-0 mb-1 sm:mb-0">{item.label}</span>
                   <span className="text-sm text-slate-700 font-medium leading-relaxed flex-1">
                     {item.value}
@@ -47,8 +48,8 @@ export const About: React.FC = () => {
         <div className="flex space-x-12 pt-8 border-t border-slate-200">
           {about.stats.map((stat, i) => (
             <div key={i}>
-              <div className="text-3xl font-bold text-slate-900 mb-1">{stat.label}</div>
-              <div className="text-xs tracking-widest text-slate-400 font-bold uppercase">{stat.sub}</div>
+              <div data-reveal className="yh-sweep text-3xl font-bold text-slate-900 mb-1">{stat.label}</div>
+              <div data-reveal className="text-xs tracking-widest text-slate-400 font-bold uppercase">{stat.sub}</div>
             </div>
           ))}
         </div>
