@@ -1,12 +1,9 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { siteContent } from '../siteContent';
 
-interface ServicesProps {
-  onSelect?: (id: string) => void;
-}
-
-export const Services: React.FC<ServicesProps> = ({ onSelect }) => {
+export const Services: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-6 md:px-12">
       <div className="text-center mb-16">
@@ -16,9 +13,9 @@ export const Services: React.FC<ServicesProps> = ({ onSelect }) => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
         {siteContent.services.map((service, index) => (
-          <div 
+          <Link 
             key={index} 
-            onClick={() => onSelect?.(service.id)}
+            to={`/services/${service.id}`}
             data-reveal
             data-spotlight
             className="group bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all border border-slate-100 cursor-pointer flex flex-col h-full"
@@ -41,7 +38,7 @@ export const Services: React.FC<ServicesProps> = ({ onSelect }) => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>

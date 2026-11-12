@@ -1,12 +1,9 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { siteContent } from '../siteContent';
 import { preloadImage } from '../lib/preload';
 
-interface NewsProps {
-  onViewAll?: () => void;
-  onSelect?: (id: string) => void;
-}
 
 const isWithinLastMonth = (dateStr: string) => {
   const date = new Date(dateStr.replace(/\./g, '/'));
@@ -16,7 +13,7 @@ const isWithinLastMonth = (dateStr: string) => {
   return diffDays <= 30;
 };
 
-export const News: React.FC<NewsProps> = ({ onViewAll, onSelect }) => {
+export const News: React.FC = () => {
   // 日付の新しい順にソートし、最初の3件のみ表示
   const sortedNews = [...siteContent.news].sort((a, b) => {
     return new Date(b.date.replace(/\./g, '/')).getTime() - new Date(a.date.replace(/\./g, '/')).getTime();
@@ -36,9 +33,9 @@ export const News: React.FC<NewsProps> = ({ onViewAll, onSelect }) => {
             {displayNews.map((item, index) => {
               const isNew = isWithinLastMonth(item.date);
               return (
-                <div 
-                  key={index} 
-                  onClick={() => onSelect?.(item.id)}
+                <Link 
+                  key={item.id} 
+                  to={`/news/${item.id}`}
                   onPointerEnter={() => preloadImage(item.image)}
                   onPointerDown={() => preloadImage(item.image)}
                   data-reveal
@@ -56,20 +53,20 @@ export const News: React.FC<NewsProps> = ({ onViewAll, onSelect }) => {
                   <span className="text-sm text-slate-700 group-hover:text-blue-600 transition-colors flex-1 truncate">
                     {item.title}
                   </span>
-                </div>
+                </Link>
               );
             })}
           </div>
           <div data-reveal className="flex justify-end">
-            <button 
-              onClick={onViewAll}
+            <Link 
+              to="/news"
               className="inline-flex items-center text-xs font-bold tracking-widest text-slate-400 hover:text-blue-600 transition-colors group"
             >
               VIEW ALL / もっと見る
               <svg className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
-            </button>
+            </Link>
           </div>
         </div>
       </div>

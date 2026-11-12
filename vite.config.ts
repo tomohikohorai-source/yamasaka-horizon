@@ -2,8 +2,50 @@ import path from 'path';
 import { defineConfig, loadEnv, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import { siteContent } from './siteContent';
+import { SITE_URL, getPageMeta, prerenderPaths } from './lib/pageMeta';
 
-const SITE_URL = 'https://www.yamasakahorizon.com';
+const escapeAttr = (s: string) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+/**
+ * ページごとの HTML をビルド時に作ります（例：/news/news-020 → news/news-020.html）。
+ * 中身はトップと同じで、<head> のタイトル・説明文・共有画像だけをそのページ用に差し替えます。
+ * SNS や LINE で記事を共有した時に、記事のタイトルと写真が表示されるようになります。
+ * （Vercel の cleanUrls 設定で、.html なしの URL でこのファイルが返ります）
+ */
+const pageHtml = (): Plugin => ({
+  name: 'yh-page-html',
+  apply: 'build',
+  enforce: 'post',
+  generateBundle(_, bundle) {
+    const index = bundle['index.html'];
+    if (!index || index.type !== 'asset') return this.warn('index.html が見つからないため、ページごとの HTML を作れませんでした');
+    const template = String(index.source);
+    for (const path of prerenderPaths()) {
+      const meta = getPageMeta(path);
+      const url = `${SITE_URL}${meta.path}`;
+      let html = template.replace(/<title>[^<]*<\/title>/, () => `<title>${escapeAttr(meta.title)}</title>`);
+      const values: [string, string][] = [
+        ['name="description" content', meta.description],
+        ['rel="canonical" href', url],
+        ['property="og:type" content', meta.type],
+        ['property="og:url" content', url],
+        ['property="og:title" content', meta.title],
+        ['property="og:description" content', meta.description],
+        ['property="og:image" content', meta.image],
+        ['name="twitter:url" content', url],
+        ['name="twitter:title" content', meta.title],
+        ['name="twitter:description" content', meta.description],
+        ['name="twitter:image" content', meta.image],
+      ];
+      for (const [attr, value] of values) {
+        const re = new RegExp(`(${attr}=")[^"]*(")`);
+        if (!re.test(html)) this.warn(`index.html に ${attr} が見つかりません（${path}）`);
+        html = html.replace(re, (_m, a, b) => `${a}${escapeAttr(value)}${b}`);
+      }
+      this.emitFile({ type: 'asset', fileName: `${path.slice(1)}.html`, source: html });
+    }
+  },
+});
 
 /**
  * ビルド時に sitemap.xml を自動生成します（公開後は /sitemap.xml で配信されます）。
@@ -51,7 +93,7 @@ export default defineConfig(({ mode }) => {
         port: 3000,
         host: '0.0.0.0',
       },
-      plugins: [react(), sitemap()],
+      plugins: [react(), sitemap(), pageHtml()],
       define: {
         'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
         'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
