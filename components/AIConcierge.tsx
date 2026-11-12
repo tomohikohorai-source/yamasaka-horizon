@@ -6,7 +6,7 @@ import { Message } from '../types';
 export const AIConcierge: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'model', text: 'こんにちは！山坂ホライゾンのAIコンシェルジュです。スポーツやエンタメ、推し活をもっと楽しくするヒントをお話ししませんか？' }
+    { role: 'model', text: 'こんにちは！ヤマサカホライズンのAIコンシェルジュです。スポーツやエンタメ、推し活をもっと楽しくするヒントをお話ししませんか？' }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);

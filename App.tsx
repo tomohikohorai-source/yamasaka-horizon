@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, useNavigate, useParams, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, useNavigate, useParams, useLocation, useSearchParams } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { News } from './components/News';
@@ -10,6 +10,11 @@ import { About } from './components/About';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
 import { CookieBanner } from './components/CookieBanner';
+import { ContactCta } from './components/ContactCta';
+import { ContactBand } from './components/ContactBand';
+import { BackToTop } from './components/BackToTop';
+import { preloadImage } from './lib/preload';
+import { getPageMeta, applyPageMeta } from './lib/pageMeta';
 import { SearchModal } from './components/SearchModal';
 import { siteContent } from './siteContent';
 
@@ -44,34 +49,94 @@ const renderTextWithLinks = (text: string) => {
 
 // --- Layout Components ---
 
-const PageLayout: React.FC<{ title: string, subtitle: string, onBack: () => void, children?: React.ReactNode }> = ({ children, title, subtitle, onBack }) => (
-  <div className="pt-32 pb-20 px-6 max-w-7xl mx-auto min-h-screen animate-in fade-in duration-700">
-    <div className="max-w-4xl mx-auto">
-      <button onClick={onBack} className="text-blue-600 font-bold text-xs tracking-widest mb-12 flex items-center group">
-        <svg className="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-        BACK
-      </button>
-      <div className="mb-16">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tighter">{title}</h1>
-        <p className="text-slate-400 font-light tracking-wide">{subtitle}</p>
-        <div className="h-1 w-12 bg-blue-500 mt-6"></div>
-      </div>
-      {children}
+/** パンくずリスト（HOME / NEWS / 記事名 のように、今いる場所を示す） */
+const Breadcrumbs: React.FC<{ items: { label: string; to?: string }[]; className?: string }> = ({ items, className = 'mb-8' }) => (
+  <nav aria-label="パンくずリスト" className={className}>
+    <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] font-bold tracking-[0.2em] uppercase text-slate-400">
+      {items.map((item, i) => (
+        <li key={i} className="flex items-center gap-2 min-w-0">
+          {i > 0 && <span aria-hidden="true" className="text-slate-300">/</span>}
+          {item.to ? (
+            <Link to={item.to} className="hover:text-blue-600 transition-colors">{item.label}</Link>
+          ) : (
+            <span aria-current="page" className="text-blue-600 truncate max-w-[14rem] md:max-w-md">{item.label}</span>
+          )}
+        </li>
+      ))}
+    </ol>
+  </nav>
+);
+
+/** 下層ページの見出し帯（パンくず＋大きな見出し） */
+const PageHeader: React.FC<{ title: string, subtitle: string }> = ({ title, subtitle }) => (
+  <header className="relative overflow-hidden bg-white border-b border-slate-100 px-6 pt-32 pb-14 md:pt-40 md:pb-20">
+    <div aria-hidden="true" className="pointer-events-none absolute -top-32 -right-24 w-[26rem] h-[26rem] rounded-full bg-gradient-to-br from-blue-100/70 to-pink-100/60 blur-3xl"></div>
+    <div className="relative max-w-4xl mx-auto">
+      <Breadcrumbs items={[{ label: 'HOME', to: '/' }, { label: title }]} />
+      <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-slate-900">{title}</h1>
+      <p className="mt-4 text-slate-400 font-light tracking-wide">{subtitle}</p>
+      <div className="h-1 w-12 mt-8 rounded-full bg-gradient-to-r from-blue-600 to-pink-500"></div>
     </div>
+  </header>
+);
+
+const PageLayout: React.FC<{ title: string, subtitle: string, children?: React.ReactNode }> = ({ children, title, subtitle }) => (
+  <div className="min-h-screen animate-in fade-in duration-700">
+    <PageHeader title={title} subtitle={subtitle} />
+    <div className="px-6 py-16 md:py-20">
+      <div className="max-w-4xl mx-auto">
+        {children}
+      </div>
+    </div>
+  </div>
+);
+
+/** お問い合わせページ：フォームはトップにあった時と同じ濃紺の背景で表示する */
+const ContactPage = () => (
+  <div className="min-h-screen animate-in fade-in duration-700">
+    <PageHeader title="Contact" subtitle="プロジェクトのご相談はこちらから" />
+    <section className="relative overflow-hidden py-24 md:py-32 bg-slate-900 text-white">
+      <div className="yh-glow" data-active aria-hidden="true"></div>
+      <Contact />
+    </section>
   </div>
 );
 
 // --- Page Components ---
 
+const NEWS_CATEGORIES = Array.from(new Set(siteContent.news.map((n) => n.category)));
+
 const NewsListPage = () => {
-  const navigate = useNavigate();
+  // カテゴリの絞り込み（URL の ?category=EVENT に保存するので、記事から戻っても絞り込みが残る）
+  const [params, setParams] = useSearchParams();
+  const requested = params.get('category') || '';
+  const active = NEWS_CATEGORIES.includes(requested) ? requested : 'ALL';
+  const list = active === 'ALL' ? siteContent.news : siteContent.news.filter((n) => n.category === active);
+  const tabs = [
+    { key: 'ALL', count: siteContent.news.length },
+    ...NEWS_CATEGORIES.map((c) => ({ key: c, count: siteContent.news.filter((n) => n.category === c).length })),
+  ];
   return (
-    <PageLayout title="News List" subtitle="お知らせ一覧" onBack={() => navigate('/')}>
-      <div className="space-y-8">
-        {siteContent.news.map((item, i) => {
+    <PageLayout title="News List" subtitle="お知らせ一覧">
+      <div className="flex flex-wrap gap-2 mb-10" aria-label="カテゴリで絞り込む">
+        {tabs.map((t) => (
+          <button
+            key={t.key}
+            aria-pressed={active === t.key}
+            onClick={() => setParams(t.key === 'ALL' ? {} : { category: t.key }, { replace: true, preventScrollReset: true })}
+            className={`text-[10px] font-bold tracking-widest uppercase px-4 py-1.5 rounded-full border transition-colors ${
+              active === t.key ? 'bg-blue-500 border-blue-500 text-white' : 'border-blue-200 text-blue-500 hover:bg-blue-50'
+            }`}
+          >
+            {t.key}<span className="ml-1.5 opacity-60">{t.count}</span>
+          </button>
+        ))}
+      </div>
+      <div key={active} className="space-y-8 animate-in fade-in duration-300">
+        {list.map((item) => {
           const isNew = isWithinLastMonth(item.date);
           return (
-            <div key={i} onClick={() => navigate(`/news/${item.id}`)} className="group border-b border-slate-100 pb-8 hover:bg-slate-50/50 transition-colors p-6 rounded-2xl cursor-pointer relative">
+            <Link key={item.id} to={`/news/${item.id}`} onPointerEnter={() => preloadImage(item.image)} onPointerDown={() => preloadImage(item.image)} className="block group border-b border-slate-100 pb-8 hover:bg-slate-50/50 transition-colors p-6 rounded-2xl cursor-pointer relative">
               <div className="flex items-center space-x-4 mb-3">
                 <span className="text-xs font-mono text-slate-400">{item.date}</span>
                 <span className="text-[10px] font-bold text-blue-500 border border-blue-500 px-2 py-0.5 rounded uppercase">{item.category}</span>
@@ -80,7 +145,7 @@ const NewsListPage = () => {
                 )}
               </div>
               <h3 className="text-lg font-bold text-slate-800 group-hover:text-blue-600 transition-colors">{item.title}</h3>
-            </div>
+            </Link>
           );
         })}
       </div>
@@ -88,26 +153,69 @@ const NewsListPage = () => {
   );
 };
 
+/** PC 用：画面の左右に出る「前の記事／次の記事」の矢印（マウスを乗せると記事名が出る） */
+const ArticleSideArrow: React.FC<{ to: string; title: string; image: string; dir: 'prev' | 'next' }> = ({ to, title, image, dir }) => (
+  <Link
+    to={to}
+    onPointerEnter={() => preloadImage(image)}
+    aria-label={`${dir === 'prev' ? '前の記事' : '次の記事'}：${title}`}
+    className={`group hidden xl:flex fixed top-1/2 -translate-y-1/2 z-30 items-center h-14 rounded-full bg-white/90 backdrop-blur border border-slate-200 shadow-lg text-slate-700 hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-colors duration-300 ${
+      dir === 'prev' ? 'left-6' : 'right-6 flex-row-reverse'
+    }`}
+  >
+    <span className="w-14 h-14 flex items-center justify-center shrink-0">
+      <svg className="w-5 h-5 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={dir === 'prev' ? 'M15 19l-7-7 7-7' : 'M9 5l7 7-7 7'} />
+      </svg>
+    </span>
+    <span className="max-w-0 group-hover:max-w-[18rem] overflow-hidden transition-[max-width] duration-500 ease-out">
+      <span className={`block w-[16rem] ${dir === 'prev' ? 'pr-6 text-left' : 'pl-6 text-right'}`}>
+        <span className="block text-[9px] font-bold tracking-[0.3em] opacity-60">{dir === 'prev' ? 'PREVIOUS' : 'NEXT'}</span>
+        <span className="block text-xs font-bold truncate">{title}</span>
+      </span>
+    </span>
+  </Link>
+);
+
 const NewsDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const currentIndex = siteContent.news.findIndex(n => n.id === id);
   const news = siteContent.news[currentIndex];
-  
+  const prevArticle = news ? siteContent.news[currentIndex + 1] : undefined;
+  const nextArticle = news ? siteContent.news[currentIndex - 1] : undefined;
+
+  // 前後の記事の写真を先に読み込んでおき、PREVIOUS / NEXT ですぐ写真が出るようにする
+  useEffect(() => {
+    preloadImage(prevArticle?.image);
+    preloadImage(nextArticle?.image);
+  }, [prevArticle, nextArticle]);
+
+  // キーボードの ← → でも前後の記事へ（入力欄で文字を打っている時は反応しない）
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+      const el = document.activeElement as HTMLElement | null;
+      if (el && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName))) return;
+      if (e.key === 'ArrowLeft' && prevArticle) navigate(`/news/${prevArticle.id}`);
+      if (e.key === 'ArrowRight' && nextArticle) navigate(`/news/${nextArticle.id}`);
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [prevArticle, nextArticle, navigate]);
+
   if (!news) return null;
 
-  const prevArticle = siteContent.news[currentIndex + 1]; 
-  const nextArticle = siteContent.news[currentIndex - 1]; 
-
   return (
-    <div className="pt-32 pb-20 px-6 max-w-5xl mx-auto min-h-screen animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <>
+    {/* 矢印は表示時のアニメーション（位置が動く要素）の外に置く。中に置くと動いている間は位置がずれるため */}
+    {prevArticle && <ArticleSideArrow dir="prev" to={`/news/${prevArticle.id}`} title={prevArticle.title} image={prevArticle.image} />}
+    {nextArticle && <ArticleSideArrow dir="next" to={`/news/${nextArticle.id}`} title={nextArticle.title} image={nextArticle.image} />}
+    <div className="pt-28 pb-20 px-6 max-w-5xl mx-auto min-h-screen animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="max-w-4xl mx-auto">
-        <button onClick={() => navigate('/news')} className="text-blue-600 font-bold text-xs tracking-widest mb-12 flex items-center group">
-          <svg className="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-          BACK TO NEWS
-        </button>
+        <Breadcrumbs className="mb-8" items={[{ label: 'HOME', to: '/' }, { label: 'NEWS', to: '/news' }, { label: news.title }]} />
         
-        <div className="mb-12">
+        <div className="mb-8">
           <div className="flex items-center space-x-4 mb-6">
             <span className="text-sm font-mono text-slate-400">{news.date}</span>
             <span className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100 uppercase">{news.type}</span>
@@ -115,19 +223,24 @@ const NewsDetailPage = () => {
               <span className="bg-pink-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full animate-pulse">NEW</span>
             )}
           </div>
-          <h1 className="text-3xl md:text-5xl font-bold mb-8 tracking-tighter text-slate-900 leading-tight">{news.title}</h1>
+          <h1 className="text-3xl md:text-5xl font-bold mb-6 tracking-tighter text-slate-900 leading-tight">{news.title}</h1>
         </div>
       </div>
 
-      <div className="bg-slate-100 rounded-3xl mb-12 overflow-hidden shadow-2xl p-4 md:p-8">
-        <img 
-          src={news.image} 
-          className="w-full h-auto block rounded-xl md:rounded-2xl" 
+      {/* 写真は高さに上限を付け（画面の4割強・最大440px）、枠も写真の大きさに合わせて、本文がすぐ目に入るようにする */}
+      <div className="flex justify-center mb-10">
+        <div className="max-w-full bg-slate-100 rounded-3xl overflow-hidden shadow-2xl p-3 md:p-5">
+        <img
+          key={news.id}
+          src={news.image}
+          className="block max-w-full w-auto h-auto object-contain rounded-xl md:rounded-2xl"
+          style={{ maxHeight: 'min(42vh, 440px)' }}
           alt={news.title}
           onError={(e) => {
             (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&q=80&w=1200";
           }}
         />
+        </div>
       </div>
 
       <div className="max-w-4xl mx-auto">
@@ -140,58 +253,57 @@ const NewsDetailPage = () => {
         <div className="mt-20 pt-12 border-t border-slate-100">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
             {prevArticle ? (
-              <button 
-                onClick={() => navigate(`/news/${prevArticle.id}`)}
-                className="group p-6 bg-slate-50 hover:bg-white border border-slate-100 rounded-2xl transition-all text-left"
+              <Link 
+                to={`/news/${prevArticle.id}`}
+                onPointerEnter={() => preloadImage(prevArticle.image)}
+                className="block group p-6 bg-slate-50 hover:bg-white border border-slate-100 rounded-2xl transition-all text-left"
               >
                 <div className="text-[10px] font-bold text-slate-400 tracking-widest mb-2 flex items-center">
                   <svg className="w-3 h-3 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
                   PREVIOUS
                 </div>
                 <div className="text-sm font-bold text-slate-800 line-clamp-1 group-hover:text-blue-600 transition-colors">{prevArticle.title}</div>
-              </button>
+              </Link>
             ) : <div className="hidden md:block"></div>}
 
             {nextArticle ? (
-              <button 
-                onClick={() => navigate(`/news/${nextArticle.id}`)}
-                className="group p-6 bg-slate-50 hover:bg-white border border-slate-100 rounded-2xl transition-all text-right"
+              <Link 
+                to={`/news/${nextArticle.id}`}
+                onPointerEnter={() => preloadImage(nextArticle.image)}
+                className="block group p-6 bg-slate-50 hover:bg-white border border-slate-100 rounded-2xl transition-all text-right"
               >
                 <div className="text-[10px] font-bold text-slate-400 tracking-widest mb-2 flex items-center justify-end">
                   NEXT
                   <svg className="w-3 h-3 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                 </div>
                 <div className="text-sm font-bold text-slate-800 line-clamp-1 group-hover:text-blue-600 transition-colors">{nextArticle.title}</div>
-              </button>
+              </Link>
             ) : <div className="hidden md:block"></div>}
           </div>
 
           <div className="flex justify-center">
-            <button 
-              onClick={() => navigate('/news')}
+            <Link 
+              to="/news"
               className="px-10 py-4 bg-slate-900 text-white text-xs font-bold tracking-[0.2em] hover:bg-blue-600 transition-all rounded-full shadow-xl"
             >
               NEWS LIST / 一覧に戻る
-            </button>
+            </Link>
           </div>
         </div>
       </div>
     </div>
+    </>
   );
 };
 
 const ServiceDetailPage = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const service = siteContent.services.find(s => s.id === id || s.title === id);
   if (!service) return null;
 
   return (
     <div className="pt-32 pb-20 px-6 max-w-5xl mx-auto min-h-screen animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <button onClick={() => navigate(-1)} className="text-blue-600 font-bold text-xs tracking-widest mb-12 flex items-center group">
-        <svg className="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-        BACK
-      </button>
+      <Breadcrumbs className="mb-10" items={[{ label: 'HOME', to: '/' }, { label: 'SERVICES', to: '/services' }, { label: service.title }]} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start mb-20">
         <div>
@@ -210,10 +322,10 @@ const ServiceDetailPage = () => {
       </div>
 
       <div className="bg-slate-50 rounded-3xl p-10 md:p-16 border border-slate-100">
-        <h3 className="text-2xl font-bold text-slate-900 mb-10 text-center">支援内容の詳細</h3>
+        <h3 data-reveal className="text-2xl font-bold text-slate-900 mb-10 text-center">支援内容の詳細</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {service.features.map((feature, idx) => (
-            <div key={idx} className="flex items-start space-x-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100 transition-transform hover:-translate-y-1">
+            <div key={idx} data-reveal data-spotlight className="flex items-start space-x-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100 transition-transform hover:-translate-y-1">
               <div className="w-8 h-8 bg-blue-50 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                 <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
@@ -225,39 +337,33 @@ const ServiceDetailPage = () => {
         </div>
       </div>
 
-      <div className="mt-20 flex justify-center">
-        <button onClick={() => navigate('/contact')} className="px-12 py-5 bg-slate-900 text-white text-xs font-bold tracking-[0.3em] hover:bg-blue-600 transition-all rounded-full shadow-2xl">
-          CONTACT US / お問い合わせ
-        </button>
-      </div>
     </div>
   );
 };
 
 const SitemapPage = () => {
-  const navigate = useNavigate();
   return (
-    <PageLayout title="Sitemap" subtitle="サイト構成・主要ページ一覧" onBack={() => navigate('/')}>
+    <PageLayout title="Sitemap" subtitle="サイト構成・主要ページ一覧">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
         <div className="space-y-6">
           <h3 className="text-xl font-bold border-b border-slate-100 pb-2">Main Content</h3>
           <ul className="space-y-3 text-slate-600 text-sm">
-            <li><button onClick={() => navigate('/')} className="hover:text-blue-600 transition-colors text-left w-full">ホーム</button></li>
-            <li><button onClick={() => navigate('/about')} className="hover:text-blue-600 transition-colors text-left w-full">私たちについて (About)</button></li>
-            <li><button onClick={() => navigate('/services')} className="hover:text-blue-600 transition-colors text-left w-full">事業内容 (Services)</button></li>
-            <li><button onClick={() => navigate('/portfolio')} className="hover:text-blue-600 transition-colors text-left w-full">実績紹介 (Portfolio)</button></li>
-            <li><button onClick={() => navigate('/news')} className="hover:text-blue-600 transition-colors text-left w-full">最新情報 (News)</button></li>
-            <li><button onClick={() => navigate('/contact')} className="hover:text-blue-600 transition-colors text-left w-full">お問い合わせ (Contact)</button></li>
+            <li><Link to="/" className="block hover:text-blue-600 transition-colors text-left w-full">ホーム</Link></li>
+            <li><Link to="/about" className="block hover:text-blue-600 transition-colors text-left w-full">私たちについて (About)</Link></li>
+            <li><Link to="/services" className="block hover:text-blue-600 transition-colors text-left w-full">事業内容 (Services)</Link></li>
+            <li><Link to="/portfolio" className="block hover:text-blue-600 transition-colors text-left w-full">実績紹介 (Portfolio)</Link></li>
+            <li><Link to="/news" className="block hover:text-blue-600 transition-colors text-left w-full">最新情報 (News)</Link></li>
+            <li><Link to="/contact" className="block hover:text-blue-600 transition-colors text-left w-full">お問い合わせ (Contact)</Link></li>
           </ul>
         </div>
         <div className="space-y-6">
           <h3 className="text-xl font-bold border-b border-slate-100 pb-2">Information</h3>
           <ul className="space-y-3 text-slate-600 text-sm">
-            <li><button onClick={() => navigate('/terms-of-service')} className="hover:text-blue-600 transition-colors text-left w-full">サイト利用条件</button></li>
-            <li><button onClick={() => navigate('/privacy-policy')} className="hover:text-blue-600 transition-colors text-left w-full">プライバシーポリシー</button></li>
-            <li><button onClick={() => navigate('/cookie-policy')} className="hover:text-blue-600 transition-colors text-left w-full">クッキーポリシー</button></li>
-            <li><button onClick={() => navigate('/specified-commercial-transactions')} className="hover:text-blue-600 transition-colors text-left w-full">Specified Commercial Transactions</button></li>
-            <li><button onClick={() => navigate('/sitemap')} className="hover:text-blue-600 transition-colors font-bold text-blue-600 text-left w-full">サイトマップ</button></li>
+            <li><Link to="/terms-of-service" className="block hover:text-blue-600 transition-colors text-left w-full">サイト利用条件</Link></li>
+            <li><Link to="/privacy-policy" className="block hover:text-blue-600 transition-colors text-left w-full">プライバシーポリシー</Link></li>
+            <li><Link to="/cookie-policy" className="block hover:text-blue-600 transition-colors text-left w-full">クッキーポリシー</Link></li>
+            <li><Link to="/specified-commercial-transactions" className="block hover:text-blue-600 transition-colors text-left w-full">Specified Commercial Transactions</Link></li>
+            <li><Link to="/sitemap" className="block hover:text-blue-600 transition-colors font-bold text-blue-600 text-left w-full">サイトマップ</Link></li>
           </ul>
         </div>
       </div>
@@ -265,8 +371,8 @@ const SitemapPage = () => {
   );
 };
 
-const LegalPage = ({ title, content, onBack }: { title: string, content: string, onBack: () => void }) => (
-  <PageLayout title={title} subtitle="Legal Information" onBack={onBack}>
+const LegalPage = ({ title, content }: { title: string, content: string }) => (
+  <PageLayout title={title} subtitle="Legal Information">
     <div className="prose prose-slate max-w-none">
       <div className="whitespace-pre-line text-slate-600 leading-relaxed bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
         {content}
@@ -285,6 +391,15 @@ const ScrollToTop = () => {
   return null;
 };
 
+// ページが変わるたびに、ブラウザのタブ名・説明文などをそのページ用に切り替える
+const PageMetaSync = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    applyPageMeta(getPageMeta(pathname));
+  }, [pathname]);
+  return null;
+};
+
 const ScrollToHash = () => {
   const { hash } = useLocation();
   useEffect(() => {
@@ -299,34 +414,27 @@ const ScrollToHash = () => {
 };
 
 const HomePage = () => {
-  const navigate = useNavigate();
   return (
     <main className="animate-in fade-in duration-1000">
       <section id="hero">
         <Hero />
       </section>
       
-      <section id="news" className="pt-8 pb-24 bg-white">
-        <News 
-          onViewAll={() => navigate('/news')} 
-          onSelect={(id) => navigate(`/news/${id}`)} 
-        />
+      {/* ヒーローを少し低くし、最初の画面でニュースのカードが見え始めるようにしている */}
+      <section id="news" className="pt-6 pb-24 md:pt-8 bg-white">
+        <News />
       </section>
 
       <section id="services" className="py-32 bg-slate-50">
-        <Services onSelect={(id) => navigate(`/services/${id}`)} />
+        <Services />
       </section>
 
       <section id="portfolio" className="py-32 bg-white">
-        <Portfolio onViewAll={() => navigate('/portfolio')} />
+        <Portfolio showViewAll />
       </section>
 
       <section id="about" className="py-32 bg-slate-50">
         <About />
-      </section>
-
-      <section id="contact" className="py-32 bg-slate-900 text-white">
-        <Contact />
       </section>
     </main>
   );
@@ -348,18 +456,20 @@ const App: React.FC = () => {
     <BrowserRouter>
       <ScrollToTop />
       <ScrollToHash />
+      <PageMetaSync />
       <div className="relative min-h-screen">
-        <NavbarWrapper isScrolled={isScrolled} onSearchToggle={() => setIsSearchOpen(true)} />
+        <div className="yh-progress" aria-hidden="true"></div>
+        <Navbar isScrolled={isScrolled} onSearchToggle={() => setIsSearchOpen(true)} />
         
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/news" element={<NewsListPage />} />
           <Route path="/news/:id" element={<NewsDetailPage />} />
-          <Route path="/services" element={<PageLayout title="Services" subtitle="スポーツ・エンタメDXへの挑戦" onBack={() => window.history.back()}><Services onSelect={(id) => window.location.href = `/services/${id}`} /></PageLayout>} />
+          <Route path="/services" element={<PageLayout title="Services" subtitle="スポーツ・エンタメDXへの挑戦"><Services /></PageLayout>} />
           <Route path="/services/:id" element={<ServiceDetailPage />} />
-          <Route path="/portfolio" element={<PageLayout title="Portfolio" subtitle="これまでの主な実績" onBack={() => window.history.back()}><Portfolio /></PageLayout>} />
-          <Route path="/about" element={<PageLayout title="About Us" subtitle="熱狂を日常に、ワクワクを未来に。" onBack={() => window.history.back()}><About /></PageLayout>} />
-          <Route path="/contact" element={<PageLayout title="Contact" subtitle="プロジェクトのご相談はこちらから" onBack={() => window.history.back()}><Contact /></PageLayout>} />
+          <Route path="/portfolio" element={<PageLayout title="Portfolio" subtitle="これまでの主な実績"><Portfolio /></PageLayout>} />
+          <Route path="/about" element={<PageLayout title="About Us" subtitle="熱狂を日常に、ワクワクを未来に。"><About /></PageLayout>} />
+          <Route path="/contact" element={<ContactPage />} />
           <Route path="/sitemap" element={<SitemapPage />} />
           <Route path="/privacy-policy" element={<LegalPage 
             title="Privacy Policy" 
@@ -392,7 +502,6 @@ const App: React.FC = () => {
 
 7. プライバシーポリシーの変更
 本ポリシーは予告なく変更することがあります。変更後の内容は本ページに掲載された時点で効力を有します。`} 
-            onBack={() => window.history.back()} 
           />} />
           <Route path="/terms-of-service" element={<LegalPage 
             title="Terms of Use" 
@@ -418,7 +527,6 @@ const App: React.FC = () => {
 
 5. 規約の変更
 当サイトは、本規約を予告なく変更することがあります。変更後の規約は本サイトに掲載された時点から効力を有します。`} 
-            onBack={() => window.history.back()} 
           />} />
           <Route path="/cookie-policy" element={<LegalPage 
             title="Cookie Policy" 
@@ -460,7 +568,6 @@ Cookieとは、ユーザーがウェブサイトを閲覧した際に、ユー�
 6. クッキーポリシーの変更
 当サイトは、法令の変更やサービス内容の変更等に応じて、本クッキーポリシーを予告なく変更することがあります。
 変更後の内容は、本サイト上に掲載した時点で効力を有します。`} 
-            onBack={() => window.history.back()} 
           />} />
           <Route path="/specified-commercial-transactions" element={<LegalPage 
             title="Specified Commercial Transactions" 
@@ -508,16 +615,18 @@ support@yamasakahorizon.com
 商品の性質上、決済完了後のお客様都合によるキャンセル・返品・返金には応じかねます。
 イベントの中止や、弊社都合によるサービス提供不能が生じた場合に限り、別途定める規約に基づき返金対応を行います。
 掲出内容の不備等、弊社に過失がある場合は速やかに修正または代替措置を講じます。`} 
-            onBack={() => window.history.back()} 
           />} />
         </Routes>
 
-        <FooterWrapper />
+        <ContactBand />
+        <Footer />
         
+        <ContactCta />
+        <BackToTop />
         <CookieBannerWrapper />
 
         {isSearchOpen && (
-          <SearchModalWrapper onClose={() => setIsSearchOpen(false)} />
+          <SearchModal onClose={() => setIsSearchOpen(false)} />
         )}
       </div>
     </BrowserRouter>
@@ -525,50 +634,6 @@ support@yamasakahorizon.com
 };
 
 // --- Wrappers to use hooks ---
-
-const NavbarWrapper = ({ isScrolled, onSearchToggle }: { isScrolled: boolean, onSearchToggle: () => void }) => {
-  const navigate = useNavigate();
-  return (
-    <Navbar 
-      isScrolled={isScrolled} 
-      onNavigate={(view) => {
-        if (view === 'home') navigate('/');
-        else if (view === 'news-list') navigate('/news');
-        else if (view === 'services-list') navigate('/services');
-        else if (view === 'portfolio-list') navigate('/portfolio');
-        else if (view === 'about-page') navigate('/about');
-        else if (view === 'contact-page') navigate('/contact');
-        else if (view === 'sitemap') navigate('/sitemap');
-        else if (view === 'privacy-policy') navigate('/privacy-policy');
-        else if (view === 'terms-of-service') navigate('/terms-of-service');
-        else if (view === 'cookie-policy') navigate('/cookie-policy');
-        else if (view === 'specified-commercial-transactions') navigate('/specified-commercial-transactions');
-        else navigate(`/${view}`);
-      }} 
-      onSearchToggle={onSearchToggle}
-    />
-  );
-};
-
-const FooterWrapper = () => {
-  const navigate = useNavigate();
-  return (
-    <Footer onNavigate={(view) => {
-      if (view === 'home') navigate('/');
-      else if (view === 'news-list') navigate('/news');
-      else if (view === 'services-list') navigate('/services');
-      else if (view === 'portfolio-list') navigate('/portfolio');
-      else if (view === 'about-page') navigate('/about');
-      else if (view === 'contact-page') navigate('/contact');
-      else if (view === 'sitemap') navigate('/sitemap');
-      else if (view === 'privacy-policy') navigate('/privacy-policy');
-      else if (view === 'terms-of-service') navigate('/terms-of-service');
-      else if (view === 'cookie-policy') navigate('/cookie-policy');
-      else if (view === 'specified-commercial-transactions') navigate('/specified-commercial-transactions');
-      else navigate(`/${view}`);
-    }} />
-  );
-};
 
 const CookieBannerWrapper = () => {
   const navigate = useNavigate();
@@ -579,32 +644,6 @@ const CookieBannerWrapper = () => {
       else if (view === 'cookie-policy') navigate('/cookie-policy');
       else navigate(`/${view}`);
     }} />
-  );
-};
-
-const SearchModalWrapper = ({ onClose }: { onClose: () => void }) => {
-  const navigate = useNavigate();
-  return (
-    <SearchModal 
-      onClose={onClose} 
-      onNavigate={(view, id) => {
-        onClose();
-        if (view === 'detail' || view === 'service-detail') navigate(`/services/${id}`);
-        else if (view === 'news-detail') navigate(`/news/${id}`);
-        else if (view === 'home') navigate('/');
-        else if (view === 'news-list') navigate('/news');
-        else if (view === 'services-list') navigate('/services');
-        else if (view === 'portfolio-list') navigate('/portfolio');
-        else if (view === 'about-page') navigate('/about');
-        else if (view === 'contact-page') navigate('/contact');
-        else if (view === 'sitemap') navigate('/sitemap');
-        else if (view === 'privacy-policy') navigate('/privacy-policy');
-        else if (view === 'terms-of-service') navigate('/terms-of-service');
-        else if (view === 'cookie-policy') navigate('/cookie-policy');
-        else if (view === 'specified-commercial-transactions') navigate('/specified-commercial-transactions');
-        else navigate(`/${view}`);
-      }}
-    />
   );
 };
 

@@ -1,26 +1,31 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { siteContent } from '../siteContent';
 
 interface PortfolioProps {
   onSelect?: (title: string) => void;
-  onViewAll?: () => void;
+  /** トップページでだけ「All Works」（実績一覧へのリンク）を出す */
+  showViewAll?: boolean;
 }
 
-export const Portfolio: React.FC<PortfolioProps> = ({ onSelect, onViewAll }) => {
+export const Portfolio: React.FC<PortfolioProps> = ({ onSelect, showViewAll }) => {
   return (
     <div className="max-w-7xl mx-auto px-6 md:px-12">
       <div className="flex flex-col md:flex-row justify-between items-end mb-16 space-y-6 md:space-y-0">
         <div>
-          <span className="text-xs tracking-[0.4em] font-bold text-slate-400 uppercase">Portfolio</span>
-          <h2 className="text-3xl md:text-4xl font-bold mt-4 text-slate-900">実績紹介</h2>
+          <span data-reveal className="inline-block text-xs tracking-[0.4em] font-bold text-slate-400 uppercase">Portfolio</span>
+          <h2 data-reveal className="text-3xl md:text-4xl font-bold mt-4 text-slate-900">実績紹介</h2>
         </div>
-        <button 
-          onClick={onViewAll}
-          className="text-xs font-bold tracking-[0.2em] border-b border-blue-500 pb-2 text-blue-600 hover:text-blue-400 transition-colors uppercase"
-        >
-          All Works
-        </button>
+        {showViewAll && (
+          <Link 
+            data-reveal
+            to="/portfolio"
+            className="text-xs font-bold tracking-[0.2em] border-b border-blue-500 pb-2 text-blue-600 hover:text-blue-400 transition-colors uppercase"
+          >
+            All Works
+          </Link>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-16">
@@ -30,7 +35,7 @@ export const Portfolio: React.FC<PortfolioProps> = ({ onSelect, onViewAll }) => 
             onClick={() => onSelect?.(project.title)}
             className="group cursor-pointer"
           >
-            <div className="relative overflow-hidden rounded-2xl shadow-sm mb-6 aspect-[16/9]">
+            <div data-reveal="mask" className="relative overflow-hidden rounded-2xl shadow-sm mb-6 aspect-[16/9]">
               <img 
                 src={project.image} 
                 alt={project.title} 
@@ -42,7 +47,7 @@ export const Portfolio: React.FC<PortfolioProps> = ({ onSelect, onViewAll }) => 
                 </span>
               </div>
             </div>
-            <div className="px-1">
+            <div data-reveal className="px-1">
               <div className="flex justify-between items-start mb-2">
                 <h3 className="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
                   {project.title}

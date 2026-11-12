@@ -1,45 +1,52 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { siteContent } from '../siteContent';
 
 interface SearchModalProps {
   onClose: () => void;
-  onNavigate: (view: string, title?: string) => void;
 }
 
-export const SearchModal: React.FC<SearchModalProps> = ({ onClose, onNavigate }) => {
+export const SearchModal: React.FC<SearchModalProps> = ({ onClose }) => {
   const [query, setQuery] = useState('');
+
+  // Esc キーで閉じる
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [onClose]);
 
   const results = useMemo(() => {
     if (!query.trim()) return [];
 
     const q = query.toLowerCase();
-    const matches: { title: string, category: string, view: string, extra?: string }[] = [];
+    const matches: { title: string, category: string, to: string }[] = [];
 
-    // Search News
+    // Search News（タイトルと本文。結果を押すとその記事を開く）
     siteContent.news.forEach(item => {
-      if (item.title.toLowerCase().includes(q)) {
-        matches.push({ title: item.title, category: 'NEWS', view: 'news-list' });
+      if (item.title.toLowerCase().includes(q) || item.content.toLowerCase().includes(q)) {
+        matches.push({ title: item.title, category: 'NEWS', to: `/news/${item.id}` });
       }
     });
 
     // Search Services
     siteContent.services.forEach(item => {
       if (item.title.toLowerCase().includes(q) || item.jpTitle.toLowerCase().includes(q) || item.description.toLowerCase().includes(q)) {
-        matches.push({ title: item.title, category: 'SERVICE', view: 'detail', extra: item.title });
+        matches.push({ title: item.title, category: 'SERVICE', to: `/services/${item.id}` });
       }
     });
 
     // Search Portfolio
     siteContent.portfolio.forEach(item => {
       if (item.title.toLowerCase().includes(q) || item.jpTitle.toLowerCase().includes(q) || item.description.toLowerCase().includes(q)) {
-        matches.push({ title: item.title, category: 'PORTFOLIO', view: 'detail', extra: item.title });
+        matches.push({ title: item.title, category: 'PORTFOLIO', to: '/portfolio' });
       }
     });
 
     // About match
     if (siteContent.about.title.toLowerCase().includes(q) || siteContent.about.description1.toLowerCase().includes(q)) {
-      matches.push({ title: 'About Us', category: 'ABOUT', view: 'about-page' });
+      matches.push({ title: 'About Us', category: 'ABOUT', to: '/about' });
     }
 
     return matches;
@@ -62,7 +69,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ onClose, onNavigate })
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
-          <button onClick={onClose} className="p-2 hover:bg-slate-50 rounded-full text-slate-400">
+          <button onClick={onClose} aria-label="検索を閉じる" className="p-2 hover:bg-slate-50 rounded-full text-slate-400">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
           </button>
         </div>
@@ -95,9 +102,10 @@ export const SearchModal: React.FC<SearchModalProps> = ({ onClose, onNavigate })
             <div className="space-y-2">
               <p className="text-[10px] font-bold tracking-widest text-slate-400 uppercase mb-4 px-2">Search Results</p>
               {results.map((res, i) => (
-                <button
+                <Link
                   key={i}
-                  onClick={() => onNavigate(res.view, res.extra)}
+                  to={res.to}
+                  onClick={onClose}
                   className="w-full text-left p-4 hover:bg-slate-50 rounded-xl flex items-center group transition-colors"
                 >
                   <div className="mr-4">
@@ -111,7 +119,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ onClose, onNavigate })
                   <svg className="w-4 h-4 ml-auto text-slate-200 group-hover:text-blue-400 transform group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
-                </button>
+                </Link>
               ))}
             </div>
           )}
