@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { siteContent } from '../siteContent';
+import { preloadImage } from '../lib/preload';
 
 interface NewsProps {
   onViewAll?: () => void;
@@ -38,6 +39,8 @@ export const News: React.FC<NewsProps> = ({ onViewAll, onSelect }) => {
                 <div 
                   key={index} 
                   onClick={() => onSelect?.(item.id)}
+                  onPointerEnter={() => preloadImage(item.image)}
+                  onPointerDown={() => preloadImage(item.image)}
                   data-reveal
                   className="yh-row group flex flex-col sm:flex-row sm:items-center border-b border-slate-100 pb-4 hover:border-blue-200 transition-colors cursor-pointer relative"
                 >

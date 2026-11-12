@@ -10,6 +10,7 @@ import { About } from './components/About';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
 import { CookieBanner } from './components/CookieBanner';
+import { preloadImage } from './lib/preload';
 import { SearchModal } from './components/SearchModal';
 import { siteContent } from './siteContent';
 
@@ -71,7 +72,7 @@ const NewsListPage = () => {
         {siteContent.news.map((item, i) => {
           const isNew = isWithinLastMonth(item.date);
           return (
-            <div key={i} data-reveal onClick={() => navigate(`/news/${item.id}`)} className="group border-b border-slate-100 pb-8 hover:bg-slate-50/50 transition-colors p-6 rounded-2xl cursor-pointer relative">
+            <div key={i} onClick={() => navigate(`/news/${item.id}`)} onPointerEnter={() => preloadImage(item.image)} onPointerDown={() => preloadImage(item.image)} className="group border-b border-slate-100 pb-8 hover:bg-slate-50/50 transition-colors p-6 rounded-2xl cursor-pointer relative">
               <div className="flex items-center space-x-4 mb-3">
                 <span className="text-xs font-mono text-slate-400">{item.date}</span>
                 <span className="text-[10px] font-bold text-blue-500 border border-blue-500 px-2 py-0.5 rounded uppercase">{item.category}</span>
@@ -93,11 +94,16 @@ const NewsDetailPage = () => {
   const navigate = useNavigate();
   const currentIndex = siteContent.news.findIndex(n => n.id === id);
   const news = siteContent.news[currentIndex];
-  
-  if (!news) return null;
+  const prevArticle = news ? siteContent.news[currentIndex + 1] : undefined;
+  const nextArticle = news ? siteContent.news[currentIndex - 1] : undefined;
 
-  const prevArticle = siteContent.news[currentIndex + 1]; 
-  const nextArticle = siteContent.news[currentIndex - 1]; 
+  // 前後の記事の写真を先に読み込んでおき、PREVIOUS / NEXT ですぐ写真が出るようにする
+  useEffect(() => {
+    preloadImage(prevArticle?.image);
+    preloadImage(nextArticle?.image);
+  }, [prevArticle, nextArticle]);
+
+  if (!news) return null;
 
   return (
     <div className="pt-32 pb-20 px-6 max-w-5xl mx-auto min-h-screen animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -120,8 +126,9 @@ const NewsDetailPage = () => {
       </div>
 
       <div className="bg-slate-100 rounded-3xl mb-12 overflow-hidden shadow-2xl p-4 md:p-8">
-        <img 
-          src={news.image} 
+        <img
+          key={news.id}
+          src={news.image}
           className="w-full h-auto block rounded-xl md:rounded-2xl" 
           alt={news.title}
           onError={(e) => {

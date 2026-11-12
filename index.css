@@ -32,8 +32,9 @@
 .animate-in.duration-200 { --yh-enter-dur: 0.2s; }
 .animate-in.duration-300 { --yh-enter-dur: 0.3s; }
 .animate-in.duration-500 { --yh-enter-dur: 0.5s; }
-.animate-in.duration-700 { --yh-enter-dur: 0.7s; }
-.animate-in.duration-1000 { --yh-enter-dur: 1s; }
+/* ページ切り替え（ニュース記事・各ページ）は、待たされる感じが出ないよう短めにしています */
+.animate-in.duration-700 { --yh-enter-dur: 0.35s; }
+.animate-in.duration-1000 { --yh-enter-dur: 0.5s; }
 
 /* ---------- スクロール量のバー（画面最上部） ---------- */
 .yh-progress {
